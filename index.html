@@ -4249,6 +4249,20 @@ function syncConnectPrompt(){
   const c=prompt('Enter the sync code from your other device:');
   if(c)syncConnect(c);
 }
+/* swap this device onto another device's code (e.g. sync was turned on here by mistake instead of entering the existing code) */
+async function syncSwitchPrompt(){
+  const c=(prompt('Enter the sync code from your other device:')||'').trim();
+  if(!c)return;
+  if(c===syncCode){alert('This device is already using that code.');return;}
+  if(c.length<12){alert('That code looks too short. Copy the full code from your other device.');return;}
+  let row=null;
+  try{const rows=await supaRpc('pull_state',{p_code:c});row=Array.isArray(rows)?rows[0]:null;}
+  catch(e){alert('Couldn\'t reach the cloud. Check your connection and try again.');return;}
+  if(!row||!row.data){alert('No data found for that code. Check it against your other device and try again.');return;}
+  if(!confirm('Switch to that code? What\'s on this device now will be replaced by the data saved under that code.'))return;
+  clearTimeout(pushTimer);
+  await syncConnect(c);
+}
 function syncDisconnect(){
   if(!confirm('Disconnect this device from sync? Your data stays on this device but will stop updating from the cloud.'))return;
   syncCode='';lastServerTs='';
@@ -4275,6 +4289,7 @@ function renderSync(){
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
         <button class="btn ghost" onclick="pullNow(true)"><svg class="ico"><use href="#i-cloud"/></svg> Refresh now</button>
+        <button class="btn ghost" onclick="syncSwitchPrompt()">Use a different code</button>
         <button class="btn ghost" style="color:var(--red);border-color:var(--red-soft)" onclick="syncDisconnect()">Disconnect this device</button>
       </div>`;
   }else{
