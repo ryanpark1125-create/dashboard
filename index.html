@@ -124,6 +124,7 @@
   .rl-time{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--muted);width:46px;flex:none;font-variant-numeric:tabular-nums}
   .rl-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--muted)}
   .rl-dot.uni{background:var(--accent)} .rl-dot.cube{background:var(--purple)} .rl-dot.exam{background:var(--red)}
+  .rl-dot.google{background:var(--teal)}
   .rl-dot.personal{background:var(--green)} .rl-dot.placement{background:var(--accent-2)}
   .rl-title{font-size:13px;font-weight:650;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .rl-row.past{opacity:.35}
@@ -165,6 +166,7 @@
   .dl-block.cube{background:var(--purple-soft);color:var(--purple)}
   .dl-block.exam{background:var(--red-soft);color:var(--red)}
   .dl-block.personal{background:var(--green-soft);color:var(--green)}
+  .dl-block.google{background:var(--teal-soft);color:var(--teal)}
   .dl-block.placement{background:var(--purple-soft);color:var(--accent-2)}
   .dl-block.past{opacity:.45}
   .dl-block.live{outline:1.5px solid var(--green)}
@@ -305,6 +307,7 @@
   .tag.placement{background:#ece4fb;color:#6d28d9}
   [data-theme="dark"] .tag.placement{background:#251a3d;color:#b794f6}
   .ev.personal{background:var(--green-soft);color:var(--green)}
+  .ev.google{background:var(--teal-soft);color:var(--teal)}
   .ev.task{background:var(--soft-bg);color:var(--muted)}
 
   /* Weekly timetable */
@@ -551,6 +554,14 @@
   .nt-pop .o .p{font-family:var(--mono);font-size:9.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
   .nt-pop .o.sel,.nt-pop .o:hover{background:var(--accent-soft);color:var(--accent)}
   .nt-pop .none{padding:8px 10px;font-size:12.5px;color:var(--muted)}
+
+  .gcal-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line-soft);font-size:13px;font-weight:600}
+  .gcal-row:first-child{border-top:none}
+  .gcal-row .dot{width:8px;height:8px;border-radius:50%;background:var(--teal);flex:none}
+  .gcal-row .dot.bad{background:var(--red)}
+  .gcal-row .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gcal-steps{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 12px;padding-left:18px}
+  .gcal-steps b{color:var(--ink-soft)}
 
   /* Gym */
   .gx-rows{display:grid;gap:7px}
@@ -1573,6 +1584,11 @@
             <span class="count" id="sync-status" style="margin-left:auto"></span></h3>
           <div id="sync-body"></div>
         </div>
+        <div class="card accent-top" id="gcal-card">
+          <h3><span class="hic c-teal"><svg class="ico"><use href="#i-calendar"/></svg></span> Google Calendar
+            <span class="count" id="gcal-status" style="margin-left:auto"></span></h3>
+          <div id="gcal-body"></div>
+        </div>
         <div class="card">
           <h3><span class="hic c-amber"><svg class="ico"><use href="#i-spark"/></svg></span> Demo &amp; reset</h3>
           <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Load demo data to see how it works, or wipe everything to start fresh.</p>
@@ -1895,6 +1911,8 @@ function migratePlacementEnd(){
   return ch;
 }
 function dDiff(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
+// your own events plus anything linked from Google Calendar (read-only)
+function allEvents(){return (typeof gcalDays!=='undefined'&&gcalDays.length)?S.events.concat(gcalDays):S.events;}
 // does event e occur on date string ds (handles repeat)
 function eventOccursOn(e,ds){
   if(!e.date||ds<e.date)return false;
@@ -1923,12 +1941,12 @@ function renderCal(){
   while(cells.length%7)cells.push({d:cells.length-(start+dim)+1,dim:true});
   const html=cells.map(c=>{
     if(c.dim)return `<div class="cal-cell dim"><div class="dnum">${c.d}</div></div>`;
-    const evs=S.events.filter(e=>eventOccursOn(e,c.full)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    const evs=allEvents().filter(e=>eventOccursOn(e,c.full)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
     // weekly schedule blocks land on their weekday (Uni Placement excluded — it would flood every weekday)
     const wd=(new Date(c.full).getDay()+6)%7;
     const blocks=(S.fixedBlocks||[]).filter(b=>b.day===wd&&!/uni\s*placement/i.test(b.title||''));
     const evHtml=[
-      ...evs.map(e=>({t:e.allDay?'':(e.time||''),h:`<div class="ev ${e.type}" onclick="openEventModal('${e.id}',null,'${c.full}')">${(e.repeat&&e.repeat!=='none')?'↻ ':''}${e.allDay?'● ':(e.time?e.time+' ':'')}${esc(e.title)}</div>`})),
+      ...evs.map(e=>({t:e.allDay?'':(e.time||''),h:`<div class="ev ${e.type}" onclick="${e.google?`openGcalEvent(${e.gi})`:`openEventModal('${e.id}',null,'${c.full}')`}">${(e.repeat&&e.repeat!=='none')?'↻ ':''}${e.allDay?'● ':(e.time?e.time+' ':'')}${esc(e.title)}</div>`})),
       ...blocks.map(b=>({t:b.start||'',h:`<div class="ev ${tagClsEv(b.type)}" onclick="openBlockModal('${b.id}')">${b.start?b.start+' ':''}${esc(b.title)}</div>`}))
     ].sort((a,b)=>a.t.localeCompare(b.t)).map(i=>i.h).join('');
     return `<div class="cal-cell ${c.full===todayStr()?'today':''}" ondblclick="openEventModal(null,'${c.full}')">
@@ -1941,7 +1959,7 @@ function renderCal(){
 const TT_DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 const TT_START=9,TT_END=21,TT_PXH=46;
 const toMin=t=>{if(!t)return 0;const[a,b]=t.split(':').map(Number);return a*60+(b||0);};
-function ttHourLbl(h){const ap=h<12?'am':'pm';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
+function ttHourLbl(h){const ap=(h%24)<12?'am':'pm';let hh=h%12;if(hh===0)hh=12;return hh+ap;}
 function minLbl(m){let h=Math.floor(m/60),mm=m%60,ap=h<12?'am':'pm',hh=h%12||12;return hh+(mm?':'+String(mm).padStart(2,'0'):'')+ap;}
 function openBlockModal(id){
   editId=id||null;
@@ -3539,7 +3557,7 @@ function allDated(){
   const t0=todayStr();
   for(let i=0;i<=7;i++){
     const d=new Date(t0);d.setDate(d.getDate()+i);const ds=ymd(d);
-    S.events.forEach(e=>{if(eventOccursOn(e,ds))out.push({kind:'Event',cat:e.type,title:e.title,due:ds,time:e.time});});
+    allEvents().forEach(e=>{if(eventOccursOn(e,ds))out.push({kind:'Event',cat:e.type,title:e.title,due:ds,time:e.time});});
   }
   return out;
 }
@@ -3551,12 +3569,12 @@ function ovRow(o){
     <span class="ov-due ${dueClass(o.due)}">${dueLabel(o.due)}</span>
   </div>`;
 }
-const tagClsEv=t=>['uni','cube','exam','personal','placement'].includes(t)?t:'personal';
+const tagClsEv=t=>['uni','cube','exam','personal','placement','google'].includes(t)?t:'personal';
 const dShort=d=>d?new Date(d).toLocaleDateString(undefined,{day:'numeric',month:'short'}):'—';
 // signature widget: today's real schedule (events + weekly blocks) with a live countdown
 function dayAgenda(ds,weekday){
   const items=[];
-  S.events.forEach(e=>{if(eventOccursOn(e,ds))items.push({id:e.id,kind:'event',time:e.allDay?'':(e.time||''),end:e.end||'',title:e.title,type:e.type,allDay:!!e.allDay});});
+  allEvents().forEach(e=>{if(eventOccursOn(e,ds))items.push({id:e.id,kind:'event',time:e.allDay?'':(e.time||''),end:e.end||'',title:e.title,type:e.type,allDay:!!e.allDay,google:!!e.google,gi:e.gi});});
   (S.fixedBlocks||[]).forEach(b=>{if(b.day===weekday&&!/uni\s*placement/i.test(b.title||''))items.push({id:b.id,kind:'block',time:b.start||'',end:b.end||'',title:b.title,type:b.type||'personal'});}); // same filter as the calendar view
   items.sort((a,b)=>(a.allDay?-1:0)-(b.allDay?-1:0)||(a.time||'99:99').localeCompare(b.time||'99:99'));
   return items;
@@ -3592,7 +3610,7 @@ function renderRail(){
     let chip='';
     if(i===live)chip='<span class="rl-chip live" style="float:right;margin-left:6px">now</span>';
     else if(i===next){const m=i.s-nowMin;const hh=Math.floor(m/60);chip=`<span class="rl-chip" style="float:right;margin-left:6px">in ${hh?hh+'h ':''}${m%60}m</span>`;}
-    const click=i.kind==='block'?`openBlockModal('${i.id}')`:`openEventModal('${i.id}',null,'${ds}')`;
+    const click=i.kind==='block'?`openBlockModal('${i.id}')`:i.google?`openGcalEvent(${i.gi})`:`openEventModal('${i.id}',null,'${ds}')`;
     return `<div class="dl-block ${tagClsEv(i.type)} ${i.e<=nowMin?'past':''} ${i===live?'live':''}"
       style="top:${top}px;height:${hgt}px;left:calc(${left}% + 1px);width:calc(${w}% - 3px)" onclick="${click}">
       ${chip}<span class="t">${minLbl(i.s)}${i.end?'–'+minLbl(i.e):''}</span>${esc(i.title)}
@@ -4233,6 +4251,7 @@ function applyRemote(data,ts){
 async function syncGenerate(){
   syncCode=genCode();localStorage.setItem(KEY+'_synccode',syncCode);
   lastServerTs='';localStorage.removeItem(KEY+'_syncts');localStorage.removeItem(IMG_PUSHED_KEY);
+  gcalClear();
   await pushNow();renderSync();imgSyncAll();
 }
 async function syncConnect(code){
@@ -4240,10 +4259,10 @@ async function syncConnect(code){
   if(code.length<12){alert('That code looks too short. Copy the full code from your other device.');return;}
   syncCode=code;localStorage.setItem(KEY+'_synccode',code);
   lastServerTs='';localStorage.removeItem(KEY+'_syncts');
-  localStorage.removeItem(IMG_PUSHED_KEY);
+  localStorage.removeItem(IMG_PUSHED_KEY);gcalClear();
   const row=await pullNow(true);
   if(!row)await pushNow(); // code had no data yet → seed it with this device's data
-  renderSync();imgSyncAll();
+  renderSync();imgSyncAll();gcalRefresh(true);
 }
 function syncConnectPrompt(){
   const c=prompt('Enter the sync code from your other device:');
@@ -4266,7 +4285,7 @@ async function syncSwitchPrompt(){
 function syncDisconnect(){
   if(!confirm('Disconnect this device from sync? Your data stays on this device but will stop updating from the cloud.'))return;
   syncCode='';lastServerTs='';
-  localStorage.removeItem(KEY+'_synccode');localStorage.removeItem(KEY+'_syncts');localStorage.removeItem(IMG_PUSHED_KEY);
+  localStorage.removeItem(KEY+'_synccode');localStorage.removeItem(KEY+'_syncts');localStorage.removeItem(IMG_PUSHED_KEY);gcalClear();
   setSyncStatus('Off');renderSync();
 }
 function copySyncCode(){
@@ -4275,6 +4294,7 @@ function copySyncCode(){
   setSyncStatus('Code copied');
 }
 function renderSync(){
+  if(typeof renderGcal==='function')renderGcal();
   const body=document.getElementById('sync-body');if(!body)return;
   const st=document.getElementById('sync-status');
   if(syncOn()){
@@ -4302,6 +4322,109 @@ function renderSync(){
       </div>`;
   }
 }
+/* ============ GOOGLE CALENDAR (read-only, via the gcal server function) ============
+   The secret iCal address is sent to the server once and stored there against the sync code —
+   it is never kept in this page. Events are cached per device for instant loads. */
+const GCAL_KEY=KEY+'_gcal';
+var gcal={cals:[],events:[],at:''};
+try{gcal=Object.assign(gcal,JSON.parse(localStorage.getItem(GCAL_KEY)||'{}'));}catch(_){}
+var gcalDays=[];var gcalBusy=false;
+const hm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+/* server events (UTC instants / all-day date ranges) → one dashboard-shaped entry per local day */
+function gcalBuild(){
+  const out=[];const add=o=>{o.gi=out.length;o.type='google';o.repeat='none';o.google=true;out.push(o);};
+  (gcal.events||[]).forEach(e=>{
+    const base={title:e.title,location:e.location||'',cal:e.cal};
+    if(e.allDay){let d=e.start,n=0;while(d<e.end&&n++<62){add(Object.assign({id:'g'+out.length,date:d,time:'',end:'',allDay:true},base));d=dsAdd(d,1);}return;}
+    const st=new Date(e.start),en=new Date(e.end);if(isNaN(st))return;
+    const sd=ymd(st),ed=isNaN(en)?sd:ymd(en);
+    if(sd===ed||en-st<=0){add(Object.assign({id:'g'+out.length,date:sd,time:hm(st),end:en>st?hm(en):'',allDay:false},base));return;}
+    // spans midnight: first day from the start time, full days between, last day until the end time
+    add(Object.assign({id:'g'+out.length,date:sd,time:hm(st),end:'23:59',allDay:false},base));
+    let d=dsAdd(sd,1),n=0;
+    while(d<ed&&n++<62){add(Object.assign({id:'g'+out.length,date:d,time:'',end:'',allDay:true},base));d=dsAdd(d,1);}
+    if(hm(en)!=='00:00')add(Object.assign({id:'g'+out.length,date:ed,time:'00:00',end:hm(en),allDay:false},base));
+  });
+  gcalDays=out;
+}
+gcalBuild();
+async function gcalCall(body){
+  const r=await fetch(SUPA_URL+'/functions/v1/gcal',{method:'POST',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(Object.assign({code:syncCode},body))});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error||('Calendar service error ('+r.status+')'));
+  return j;
+}
+function gcalStore(){try{localStorage.setItem(GCAL_KEY,JSON.stringify(gcal));}catch(_){}}
+function gcalRedraw(){gcalBuild();renderGcal();if(document.getElementById('sec-calendar').classList.contains('active'))renderCal();renderToday();}
+function gcalClear(){gcal={cals:[],events:[],at:''};localStorage.removeItem(GCAL_KEY);gcalRedraw();}
+async function gcalRefresh(force){
+  if(!syncOn()||gcalBusy)return;
+  if(!force&&gcal.at&&Date.now()-new Date(gcal.at).getTime()<5*60*1000)return; // at most every 5 minutes unless asked
+  gcalBusy=true;renderGcal();
+  try{
+    const from=new Date();from.setDate(from.getDate()-62);const to=new Date();to.setDate(to.getDate()+366);
+    const j=await gcalCall({action:'events',from:from.toISOString(),to:to.toISOString()});
+    gcal={cals:j.calendars||[],events:(j.calendars||[]).length?(j.events||[]):[],at:j.fetchedAt||new Date().toISOString()};
+    gcalStore();
+  }catch(e){gcal.err=String(e.message||e);}
+  gcalBusy=false;gcalRedraw();
+}
+async function gcalAdd(){
+  const inp=document.getElementById('gcal-url');const url=(inp.value||'').trim();if(!url)return inp.focus();
+  const btn=document.getElementById('gcal-add');btn.disabled=true;btn.textContent='Linking…';
+  try{await gcalCall({action:'add',url});inp.value='';delete gcal.err;await gcalRefresh(true);}
+  catch(e){alert(e.message||'Couldn\'t link that calendar.');}
+  renderGcal();
+}
+async function gcalRemove(id){
+  const c=(gcal.cals||[]).find(x=>x.id===id);
+  if(!confirm(`Unlink “${c?c.name:'this calendar'}”? Its events disappear from the dashboard. Nothing changes in Google Calendar.`))return;
+  try{await gcalCall({action:'remove',id});await gcalRefresh(true);}catch(e){alert(e.message||'Couldn\'t unlink it.');}
+}
+function openGcalEvent(i){
+  const e=gcalDays[i];if(!e)return;
+  const c=(gcal.cals||[]).find(x=>x.id===e.cal);
+  const when=new Date(e.date+'T00:00:00').toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})+(e.allDay?' · all day':` · ${minLbl(toMin(e.time))}${e.end?'–'+minLbl(toMin(e.end)):''}`);
+  showModal(`<h3>${esc(e.title)}</h3>
+    <div class="hob-row"><span class="hob-k">When</span><span class="hob-v" style="font-weight:600">${esc(when)}</span></div>
+    ${e.location?`<div class="hob-row"><span class="hob-k">Where</span><span class="hob-v" style="font-weight:600;text-align:right">${esc(e.location)}</span></div>`:''}
+    <div class="hob-row"><span class="hob-k">Calendar</span><span class="hob-v" style="font-weight:600">${esc(c?c.name:'Google Calendar')}</span></div>
+    <div class="fi-note" style="margin-top:12px">From Google Calendar — edit it there and it updates here within a few minutes.</div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal()">Close</button></div>`);
+}
+function renderGcal(){
+  const body=document.getElementById('gcal-body');if(!body)return;
+  const st=document.getElementById('gcal-status');
+  if(!syncOn()){st.textContent='';
+    body.innerHTML=`<p style="color:var(--muted);font-size:13px">Turn on Cloud sync first — your Google calendars are linked to your sync code so they show on every device.</p>`;return;}
+  const cals=gcal.cals||[];
+  if(document.activeElement&&document.activeElement.id==='gcal-url')return; // don't redraw under the cursor
+  st.textContent=gcalBusy?'Updating…':cals.length?(gcal.at?'Updated '+new Date(gcal.at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}):''):'Not linked';
+  const keep=(document.getElementById('gcal-url')||{}).value||'';
+  body.innerHTML=`
+    <p style="color:var(--muted);font-size:13px;margin-bottom:12px">Show your Google Calendar events on the dashboard calendar and Today page. Read-only: you still add and edit them in Google.</p>
+    ${cals.length?`<div style="margin-bottom:14px">${cals.map(c=>`<div class="gcal-row"><span class="dot ${c.ok===false?'bad':''}"></span><span class="nm">${esc(c.name)}${c.ok===false?' <span style="color:var(--red);font-weight:500">· couldn\'t load</span>':''}</span>
+      <button class="btn ghost sm" onclick="gcalRemove('${c.id}')">Unlink</button></div>`).join('')}
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">${gcalDays.length.toLocaleString()} event${gcalDays.length===1?'':'s'} loaded (2 months back, 12 months ahead)${gcal.err?` · <span style="color:var(--red)">${esc(gcal.err)}</span>`:''}</div></div>`:''}
+    <details ${cals.length?'':'open'}><summary style="cursor:pointer;font-size:13px;font-weight:700;margin-bottom:8px">${cals.length?'Link another calendar':'How to link a calendar'}</summary>
+      <ol class="gcal-steps">
+        <li>On a computer, open <b>calendar.google.com</b> → gear icon → <b>Settings</b>.</li>
+        <li>Under <b>Settings for my calendars</b>, click the calendar you want.</li>
+        <li>Scroll to <b>Integrate calendar</b> and copy the <b>Secret address in iCal format</b>.</li>
+        <li>Paste it below. Treat it like a password: anyone with it can read that calendar.</li>
+      </ol>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input class="pt-input" id="gcal-url" type="password" autocomplete="off" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics" style="flex:1;min-width:220px" onkeydown="if(event.key==='Enter')gcalAdd()">
+        <button class="btn" id="gcal-add" onclick="gcalAdd()">Link calendar</button>
+      </div></details>
+    ${cals.length?`<div style="margin-top:14px"><button class="btn ghost" onclick="gcalRefresh(true)"><svg class="ico"><use href="#i-cloud"/></svg> Refresh now</button></div>`:''}`;
+  if(keep)document.getElementById('gcal-url').value=keep;
+}
+setInterval(()=>{if(!document.hidden)gcalRefresh();},60*1000);
+window.addEventListener('focus',()=>gcalRefresh());
+
 // live updates: poll for remote changes + refresh when the tab regains focus
 setInterval(()=>{if(syncOn()&&!document.hidden)pullNow();},5000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&syncOn())pullNow();});
@@ -4317,7 +4440,7 @@ if(seedUniPlacement())_changed=true;
 if(_changed)localStorage.setItem(KEY,JSON.stringify(S));
 renderAll();
 setInterval(tick,1000*30);tick(); // after every definition: tick can save, which reaches the sync layer
-if(syncOn()){pullNow();setTimeout(imgSyncAll,3000);} // fetch latest from the cloud on startup, then top up any pictures it's missing
+if(syncOn()){pullNow();setTimeout(imgSyncAll,3000);gcalRefresh(true);} // fetch latest from the cloud on startup, then top up any pictures it's missing
 if(!S.tasks.length&&!S.students.length&&!S.uni.length&&!S.events.length){
   document.getElementById('today-urgent').innerHTML=empty('i-spark','Welcome! Go to <b>Backup &amp; Settings</b> → <b>Load demo data</b> to explore, or just start adding your own.');
 }
