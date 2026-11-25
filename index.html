@@ -2256,7 +2256,7 @@ function openGymModal(id){
         name:r.querySelector('.gx-name').value.trim(),sets:gxNum(r.querySelector('.gx-sets').value),
         reps:gxNum(r.querySelector('.gx-reps').value),weight:gxNum(r.querySelector('.gx-kg').value)})).filter(e=>e.name);
       const notes=richVal('m-notes'),workout=val('m-work').trim();
-      if(!exercises.length&&!workout&&!plainText(notes).trim())return;
+      if(!exercises.length&&!workout&&!hasContent(notes))return;
       const o={id:id||uid(),date:val('m-date'),workout,exercises,notes};
       if(id)S.gymLogs=gyms().map(x=>x.id===id?o:x);else gyms().push(o);
       save();closeModal();
@@ -2640,8 +2640,8 @@ function noteSearchHTML(q){
 function saveNoteDoc(){
   if(!currentNote||!noteById(currentNote))return;const el=document.getElementById('nt-doc');if(!el)return;
   const v=richVal('nt-doc'),old=noteDocs()[currentNote]||'';
-  if(v===old||(!plainText(v).trim()&&!old))return;
-  if(plainText(v).trim())noteDocs()[currentNote]=v;else delete noteDocs()[currentNote];
+  if(v===old||(!hasContent(v)&&!old))return;
+  if(hasContent(v))noteDocs()[currentNote]=v;else delete noteDocs()[currentNote];
   noteById(currentNote).updated=Date.now();save();
 }
 let ntSaveT=null;
@@ -2728,8 +2728,8 @@ function closePeek(){if(!peekId)return;savePeekDoc();peekId='';document.getEleme
 function savePeekDoc(){
   if(!peekId||!noteById(peekId))return;const el=document.getElementById('nt-peek-doc');if(!el)return;
   const v=richVal('nt-peek-doc'),old=noteDocs()[peekId]||'';
-  if(v===old||(!plainText(v).trim()&&!old))return;
-  if(plainText(v).trim())noteDocs()[peekId]=v;else delete noteDocs()[peekId];
+  if(v===old||(!hasContent(v)&&!old))return;
+  if(hasContent(v))noteDocs()[peekId]=v;else delete noteDocs()[peekId];
   noteById(peekId).updated=Date.now();save();
 }
 function renderPeek(){
@@ -2878,7 +2878,7 @@ function deleteChessPage(id){
 function openChessPage(id){currentChessPage=id;renderChessPage();goSection('chesspage','chess');}
 function saveChessDoc(){
   if(!currentChessPage)return;const v=richVal('cp-doc');
-  if(plainText(v).trim())chessDocs()[currentChessPage]=v;else delete chessDocs()[currentChessPage];save();
+  if(hasContent(v))chessDocs()[currentChessPage]=v;else delete chessDocs()[currentChessPage];save();
 }
 function renderChessPage(){
   const el=document.getElementById('cp-doc');if(!el||!currentChessPage)return;
@@ -2892,7 +2892,7 @@ function renderChessPage(){
   document.getElementById('cp-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
   document.getElementById('cp-sub').textContent=pg.desc||(w?`${w} word${w===1?'':'s'}`:'Nothing written yet');
 }
-function saveChess(){const v=richVal('chess-doc');if(v===(S.chessNotes||''))return;S.chessNotes=plainText(v).trim()?v:'';save();}
+function saveChess(){const v=richVal('chess-doc');if(v===(S.chessNotes||''))return;S.chessNotes=hasContent(v)?v:'';save();}
 function renderChess(){
   const el=document.getElementById('chess-doc');if(!el)return;
   if(!document.getElementById('chess-doc-bar').children.length)richBar('chess-doc-bar','chess-doc');
@@ -2990,7 +2990,7 @@ function saveBibleDoc(fieldId){
   else if(fieldId==='sb-doc'){if(!currentTopic||!currentSub)return;k=subKey(currentTopic,currentSub);}
   else return;
   const v=richVal(fieldId);
-  if(plainText(v).trim())bdocs()[k]=v;else delete bdocs()[k];
+  if(hasContent(v))bdocs()[k]=v;else delete bdocs()[k];
   save();
 }
 function addBibleSub(){
@@ -3208,7 +3208,7 @@ function deleteBjjPage(id){
 function openBjjPage(id){currentBjjPage=id;renderBjjPage();goSection('bjjpage','bjj');}
 function saveBjjDoc(){
   if(!currentBjjPage)return;const v=richVal('bp-doc');
-  if(plainText(v).trim())bjjDocs()[currentBjjPage]=v;else delete bjjDocs()[currentBjjPage];save();
+  if(hasContent(v))bjjDocs()[currentBjjPage]=v;else delete bjjDocs()[currentBjjPage];save();
 }
 function renderBjjPage(){
   const el=document.getElementById('bp-doc');if(!el||!currentBjjPage)return;
@@ -3707,6 +3707,8 @@ function sanitizeHTML(html){
   return out.innerHTML;
 }
 const hasHTML=v=>/<[a-z][\s\S]*>/i.test(v||'');
+/* a note counts as non-empty if it has words, a picture or a table */
+const hasContent=v=>!!plainText(v).trim()||/<(img|table)\b/i.test(v||'');
 // display: rich content as-is, older plain-text notes escaped with their line breaks kept
 const richHTML=v=>hasHTML(v)?sanitizeHTML(v):esc(v||'').replace(/\n/g,'<br>');
 // for searching and previews
