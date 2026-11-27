@@ -1080,13 +1080,6 @@
         <div class="cal-grid" id="cal-dows"></div>
         <div class="cal-grid" id="cal-body" style="margin-top:7px"></div>
       </div>
-
-      <div class="card" style="margin-top:18px">
-        <h3><span class="hic c-purple"><svg class="ico"><use href="#i-calclock"/></svg></span> Weekly schedule
-          <span class="count" style="margin-left:6px">fixed week · repeats every week</span>
-          <button class="btn sm" style="margin-left:auto" onclick="openBlockModal()"><svg class="ico"><use href="#i-plus"/></svg> Add block</button></h3>
-        <div style="overflow-x:auto"><div id="timetable"></div></div>
-      </div>
     </section>
 
     <!-- UNI -->
@@ -1963,29 +1956,6 @@ function ttPack(items){ // assign lane/lanes for overlapping items within a day
   items.forEach(it=>{if(cl.length&&it.s>=clEnd){clusters.push(cl);cl=[];clEnd=-1;}cl.push(it);clEnd=Math.max(clEnd,it.e);});
   if(cl.length)clusters.push(cl);
   clusters.forEach(c=>{const lanes=[];c.forEach(it=>{let p=false;for(let i=0;i<lanes.length;i++){if(lanes[i]<=it.s){it.lane=i;lanes[i]=it.e;p=true;break;}}if(!p){it.lane=lanes.length;lanes.push(it.e);}});c.forEach(it=>it.lanes=lanes.length);});
-}
-function renderTimetable(){
-  const H=(TT_END-TT_START)*TT_PXH;
-  const cols=[[],[],[],[],[],[],[]];
-  (S.fixedBlocks||[]).forEach(b=>{if(b.start&&b.end!=null)cols[b.day].push({s:toMin(b.start),e:Math.max(toMin(b.end),toMin(b.start)+15),title:b.title,type:b.type||'personal',id:b.id,kind:'block'});});
-  S.events.filter(e=>e.repeat==='weekly'&&e.time).forEach(e=>{const di=(new Date(e.date).getDay()+6)%7;const s=toMin(e.time);const en=e.end?Math.max(toMin(e.end),s+15):s+60;cols[di].push({s,e:en,title:e.title,type:e.type,id:e.id,kind:'event'});});
-  let gutter='';
-  for(let h=TT_START;h<=TT_END;h++)gutter+=`<div class="tt-hour" style="top:${(h-TT_START)*TT_PXH}px">${ttHourLbl(h)}</div>`;
-  let colsHtml='';
-  cols.forEach((items,di)=>{
-    ttPack(items);
-    const blocks=items.map(it=>{
-      const top=Math.max(0,(it.s-TT_START*60)/60*TT_PXH);
-      const height=Math.max(20,(it.e-it.s)/60*TT_PXH-2);
-      const w=100/(it.lanes||1),left=(it.lane||0)*w;
-      const click=it.kind==='block'?`openBlockModal('${it.id}')`:`openEventModal('${it.id}')`;
-      return `<div class="tt-block ${it.type}" style="top:${top}px;height:${height}px;left:calc(${left}% + 2px);width:calc(${w}% - 4px)" onclick="${click}"><span class="b-time">${minLbl(it.s)}</span>${esc(it.title)}</div>`;
-    }).join('');
-    colsHtml+=`<div class="tt-col" style="height:${H}px">${blocks}</div>`;
-  });
-  document.getElementById('timetable').innerHTML=
-    `<div class="tt-days"><div></div>${TT_DAYS.map(d=>`<div class="tt-day">${d}</div>`).join('')}</div>`+
-    `<div class="tt-grid"><div class="tt-gutter" style="height:${H}px">${gutter}</div>${colsHtml}</div>`;
 }
 
 /* ============ UNI ============ */
@@ -3638,7 +3608,7 @@ function renderToday(){
 }
 
 /* ============ SHARED RENDER ============ */
-function renderAll(){renderWeek();renderOverdue();renderTasks();renderUni();renderPatientLogs();renderBjjLogs();renderBjjPoints();renderEscapes();renderBjjHub();renderBibleNotes();renderBookPage();renderTopicPage();renderSubPage();renderBjjPage();renderNotes();renderChess();renderChessHub();renderChessPage();renderGym();renderGymHub();renderDiet();renderHobbies();renderRecurring();renderForecast();renderBuyList();renderTimetable();renderToday();
+function renderAll(){renderWeek();renderOverdue();renderTasks();renderUni();renderPatientLogs();renderBjjLogs();renderBjjPoints();renderEscapes();renderBjjHub();renderBibleNotes();renderBookPage();renderTopicPage();renderSubPage();renderBjjPage();renderNotes();renderChess();renderChessHub();renderChessPage();renderGym();renderGymHub();renderDiet();renderHobbies();renderRecurring();renderForecast();renderBuyList();renderToday();
   if(document.getElementById('sec-calendar').classList.contains('active'))renderCal();
   const sv=localStorage.getItem(KEY+'_saved');
   document.getElementById('last-saved').textContent=sv?'Last saved: '+new Date(sv).toLocaleString():'';
