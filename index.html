@@ -1024,15 +1024,6 @@
         <button class="btn" onclick="openTaskModal()"><svg class="ico"><use href="#i-plus"/></svg> New task</button>
       </div>
 
-      <!-- Scratchpad -->
-      <div class="card" style="margin-bottom:18px">
-        <h3><span class="hic c-amber"><svg class="ico"><use href="#i-doc"/></svg></span> Notes
-          <span class="count" id="tn-state" style="margin-left:auto;font-weight:600">saves as you click away</span></h3>
-        <div class="rich"><div class="rich-bar" id="task-notes-bar"></div>
-          <div class="rich-in sm" id="task-notes" contenteditable="true" data-ph="Plans, thoughts, things to figure out — anything that isn't a task yet."
-            onkeydown="richKey(event,'task-notes')" onblur="saveTaskNotes(richVal('task-notes'))"></div></div>
-      </div>
-
       <!-- Weekly planner -->
       <div class="card accent-top">
         <h3><span class="hic c-blue"><svg class="ico"><use href="#i-calendar"/></svg></span> This week
@@ -1719,23 +1710,7 @@ function taskRow(t){
   </div>`;
 }
 function clearDone(){if(!confirm('Remove all completed tasks? (They\'ll be permanently deleted.)'))return;S.tasks=S.tasks.filter(t=>!t.done);save();}
-function saveTaskNotes(v){
-  S.taskNotes=v||'';
-  localStorage.setItem(KEY+'_notesAt',new Date().toISOString());
-  save();
-}
-function renderTaskNotes(){
-  const box=document.getElementById('task-notes');if(!box)return;
-  if(document.activeElement!==box)box.innerHTML=richHTML(S.taskNotes||''); // don't clobber what you're typing
-  if(!document.getElementById('task-notes-bar').children.length)richBar('task-notes-bar','task-notes');
-  const at=localStorage.getItem(KEY+'_notesAt');
-  const st=document.getElementById('tn-state');
-  if(st)st.textContent=plainText(S.taskNotes||'').trim()&&at
-    ? 'edited '+new Date(at).toLocaleDateString(undefined,{day:'numeric',month:'short'})+', '+new Date(at).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})
-    : 'saves as you click away';
-}
 function renderTasks(){
-  renderTaskNotes();
   // Active to-dos
   let active=S.tasks.filter(t=>!t.done);
   if(taskFilter!=='all')active=active.filter(t=>t.cat===taskFilter);

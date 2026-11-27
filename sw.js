@@ -1,5 +1,5 @@
 // Simple offline-first service worker for the Dashboard PWA
-const CACHE = 'dashboard-v25';
+const CACHE = 'dashboard-v26';
 const ASSETS = [
   './',
   './index.html',
