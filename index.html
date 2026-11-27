@@ -4320,7 +4320,11 @@ const MAIL_KEY=KEY+'_mail',GTOK_KEY=KEY+'_gtok',GMAIL_SCOPE='https://www.googlea
 var mail={msgs:[],triage:{},drafts:{},at:''};
 try{mail=Object.assign(mail,JSON.parse(localStorage.getItem(MAIL_KEY)||'{}'));}catch(_){}
 var mailUI={busy:'',err:'',ai:'',open:{},instr:{},drafting:{},showSetup:false};
-function mailCfg(){if(!S.mail||typeof S.mail!=='object')S.mail={clientId:'',profile:'',email:''};return S.mail;}
+function mailCfg(){if(!S.mail||typeof S.mail!=='object')S.mail={clientId:'',profile:'',email:''};if(!Array.isArray(S.mail.ignored))S.mail.ignored=[];return S.mail;}
+/* ignored emails are hidden everywhere; the list is part of your synced data so every device agrees */
+const mailIgnored=id=>mailCfg().ignored.includes(id);
+function mailIgnore(id){const c=mailCfg();if(!c.ignored.includes(id))c.ignored.push(id);if(c.ignored.length>400)c.ignored=c.ignored.slice(-400);delete mailUI.open[id];save();}
+function mailRestore(id){const c=mailCfg();c.ignored=c.ignored.filter(x=>x!==id);save();}
 function mailStore(){
   const ids=new Set(mail.msgs.map(m=>m.id));
   ['triage','drafts'].forEach(k=>Object.keys(mail[k]).forEach(id=>{if(!ids.has(id))delete mail[k][id];}));
@@ -4456,7 +4460,7 @@ function renderMail(force){
   const list=document.getElementById('mail-list');if(!list)return;
   const cfg=mailCfg(),tok=gTok();
   // badge: unread emails rated high
-  const hot=mail.msgs.filter(m=>m.unread&&mail.triage[m.id]&&mail.triage[m.id].level==='high').length;
+  const hot=mail.msgs.filter(m=>m.unread&&!mailIgnored(m.id)&&mail.triage[m.id]&&mail.triage[m.id].level==='high').length;
   const bd=document.getElementById('badge-mail');if(bd){bd.textContent=hot;bd.classList.toggle('hidden',!hot);}
   if(!document.getElementById('sec-mail').classList.contains('active'))return;
   const ae=document.activeElement;
@@ -4507,6 +4511,7 @@ function renderMail(force){
       <div class="mail-foot">
         ${m.unread?'<span class="mail-chip new">Unread</span>':''}${t.needsReply?'<span class="mail-chip reply">Needs a reply</span>':''}
         <span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn ghost sm" onclick="mailIgnore('${m.id}')" title="Hide this email from the dashboard. Nothing changes in Gmail.">Ignore</button>
           <button class="btn ghost sm" onclick="mailToggleDraft('${m.id}')">${open?'Hide draft':dr?'Show draft':'Draft reply'}</button>
           <a class="btn ghost sm" href="${esc(mailLink(m))}" target="_blank" rel="noopener noreferrer">Open in Gmail</a>
         </span>
@@ -4522,14 +4527,20 @@ function renderMail(force){
         <div style="font-size:11.5px;color:var(--muted);margin-top:8px">Writing a draft sends this email's text to the AI service. Nothing is sent to the other person until you send it yourself from Gmail.</div>
       </div>`:''}
     </div>`;};
-  const grp=(lv,label)=>{const ms=mail.msgs.filter(m=>mailLevel(m).level===lv);if(!ms.length)return '';
+  const grp=(lv,label)=>{const ms=mail.msgs.filter(m=>!mailIgnored(m.id)&&mailLevel(m).level===lv);if(!ms.length)return '';
     const inner=ms.map(item).join('');
     return lv==='low'?`<details class="mail-grp" ${mailUI.open.low?'open':''} ontoggle="mailUI.open.low=this.open"><summary class="mail-gh" style="cursor:pointer">${label}<span class="n">${ms.length}</span></summary>${inner}</details>`
       :`<div class="mail-grp"><div class="mail-gh">${label}<span class="n">${ms.length}</span></div>${inner}</div>`;};
+  const ignoredGrp=()=>{const ms=mail.msgs.filter(m=>mailIgnored(m.id));if(!ms.length)return '';
+    return `<details class="mail-grp" ${mailUI.open.ign?'open':''} ontoggle="mailUI.open.ign=this.open"><summary class="mail-gh" style="cursor:pointer">Ignored<span class="n">${ms.length}</span></summary>
+      ${ms.map(m=>`<div class="mail-it" style="opacity:.75"><div class="mail-top"><span class="mail-from">${esc(mailName(m.from))}</span><span class="mail-age">${mailAge(m.ts)}</span></div>
+        <div class="mail-subj" style="font-weight:600">${esc(m.subject)}</div>
+        <div class="mail-foot"><span style="margin-left:auto;display:flex;gap:6px"><button class="btn ghost sm" onclick="mailRestore('${m.id}')">Restore</button>
+          <a class="btn ghost sm" href="${esc(mailLink(m))}" target="_blank" rel="noopener noreferrer">Open in Gmail</a></span></div></div>`).join('')}</details>`;};
   const pending=mail.msgs.some(m=>!mail.triage[m.id])&&mailUI.busy;
   list.innerHTML=(pending?`<div class="mail-banner">${esc(mailUI.busy)}</div>`:'')+
     (grp('high','Needs attention')||`<div class="mail-grp"><div class="mail-gh">Needs attention<span class="n">0</span></div><div class="card" style="padding:16px;font-size:13px;color:var(--muted)">Nothing urgent in the last two weeks.</div></div>`)+
-    grp('medium','Worth a look')+grp('low','Everything else');
+    grp('medium','Worth a look')+grp('low','Everything else')+ignoredGrp();
 }
 
 /* ============ GOOGLE CALENDAR (read-only, via the gcal server function) ============
