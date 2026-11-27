@@ -563,6 +563,36 @@
   .gcal-steps{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 12px;padding-left:18px}
   .gcal-steps b{color:var(--ink-soft)}
 
+  /* Email */
+  a.btn{text-decoration:none;display:inline-flex;align-items:center}
+  .mail-banner{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:11px 14px;margin-bottom:14px;font-size:13px;color:var(--ink-soft);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .mail-banner.warn{border-color:var(--amber);background:var(--amber-soft)}
+  .mail-banner.err{border-color:var(--red);background:var(--red-soft)}
+  .mail-grp{margin-bottom:18px}
+  .mail-gh{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px 2px;display:flex;align-items:center;gap:8px}
+  .mail-gh .n{background:var(--soft-bg);border-radius:20px;padding:1px 8px;color:var(--ink-soft)}
+  .mail-it{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:9px;box-shadow:var(--shadow-sm);border-left:3px solid var(--line)}
+  .mail-it.high{border-left-color:var(--red)}
+  .mail-it.medium{border-left-color:var(--amber)}
+  .mail-it.unread .mail-subj{font-weight:800}
+  .mail-top{display:flex;align-items:baseline;gap:10px}
+  .mail-from{font-weight:700;font-size:13.5px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mail-age{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap;flex:none}
+  .mail-subj{font-size:13.5px;font-weight:600;margin-top:3px;color:var(--ink)}
+  .mail-snip{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .mail-why{font-size:12.5px;color:var(--ink-soft);margin-top:8px;padding:7px 10px;background:var(--soft-bg);border-radius:9px;line-height:1.45}
+  .mail-foot{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .mail-chip{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:var(--soft-bg);color:var(--muted)}
+  .mail-chip.reply{background:var(--accent-soft);color:var(--accent)}
+  .mail-chip.new{background:var(--green-soft);color:var(--green)}
+  .mail-draft{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft)}
+  .mail-draft textarea,.mail-draft input,.mail-setup textarea,.mail-setup input{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:10px 12px;background:var(--soft-bg);font:inherit;font-size:13px;line-height:1.55}
+  .mail-draft textarea:focus,.mail-draft input:focus,.mail-setup textarea:focus,.mail-setup input:focus{outline:none;border-color:var(--accent);background:var(--panel);box-shadow:0 0 0 3px var(--accent-soft)}
+  .mail-draft textarea{min-height:170px;resize:vertical;margin-top:8px}
+  .mail-setup ol{font-size:13px;color:var(--ink-soft);line-height:1.65;padding-left:20px;margin:0 0 14px}
+  .mail-setup code{font-family:var(--mono);font-size:12px;background:var(--soft-bg);padding:1px 6px;border-radius:5px;word-break:break-all}
+  .mail-setup label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:12px 0 5px}
+
   /* Gym */
   .gx-rows{display:grid;gap:7px}
   .gx-row{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px 78px 30px;gap:7px;align-items:center}
@@ -934,6 +964,7 @@
   <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 5-13.5 14-14-.5 9-6 14-14 14z"/><path d="M5 19l7.5-7.5"/></symbol>
   <symbol id="i-chess" viewBox="0 0 24 24"><path d="M8 20h8M9 17h6l-1-3.5h-4z"/><path d="M10 13.5c-1.5-2-1.5-4.5-.5-6h5c1 1.5 1 4-.5 6"/><path d="M9.5 7.5l1.5-3h2l1.5 3"/></symbol>
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M9.5 4.5v15M15.5 10l-2.5 2 2.5 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 5.5 5.5 0 0 1 10.6-1.4A3.8 3.8 0 0 1 17.5 18z"/><path d="M9 13.5l2 2 4-4"/></symbol>
 </defs></svg>
 
@@ -947,6 +978,7 @@
     <button class="nav-item active" data-nav="today"><svg class="ico"><use href="#i-today"/></svg>Today</button>
     <button class="nav-item" data-nav="tasks"><svg class="ico"><use href="#i-check"/></svg>Tasks<span class="badge hidden" id="badge-tasks">0</span></button>
     <button class="nav-item" data-nav="calendar"><svg class="ico"><use href="#i-calendar"/></svg>Calendar</button>
+    <button class="nav-item" data-nav="mail"><svg class="ico"><use href="#i-mail"/></svg>Email<span class="badge hidden" id="badge-mail">0</span></button>
     <button class="nav-item" data-nav="uni"><svg class="ico"><use href="#i-tooth"/></svg>Uni</button>
     <button class="nav-item sub" data-nav="plogs"><svg class="ico"><use href="#i-users"/></svg>Patient log</button>
     <button class="nav-item sub" data-nav="notes"><svg class="ico"><use href="#i-doc"/></svg>Notes</button>
@@ -1080,6 +1112,18 @@
         <div class="cal-grid" id="cal-dows"></div>
         <div class="cal-grid" id="cal-body" style="margin-top:7px"></div>
       </div>
+    </section>
+
+    <!-- EMAIL -->
+    <section class="section" id="sec-mail">
+      <div class="page-head">
+        <div class="ph-left"><div class="ph-ico c-blue"><svg class="ico"><use href="#i-mail"/></svg></div>
+          <div><h2>Email</h2><div class="sub" id="mail-sub">What needs your attention, with replies drafted on request.</div></div></div>
+        <div style="display:flex;gap:8px" id="mail-actions"></div>
+      </div>
+      <div id="mail-banner"></div>
+      <div id="mail-setup"></div>
+      <div id="mail-list"></div>
     </section>
 
     <!-- UNI -->
@@ -1596,7 +1640,7 @@
 const KEY='dashboard_v1';
 const blank={tasks:[],events:[],uni:[],hours:{done:0,target:0},students:[],admin:[],
   week:{start:'',days:{mon:[],tue:[],wed:[],thu:[],fri:[],sat:[],sun:[]}},delayed:[],finances:[],
-  recurring:[],startBalance:0,fixedBlocks:[],patients:{},patientLogs:[],bjjLogs:[],bjjPoints:[],bjjEscapes:[],bjjPositions:[],bibleNotes:[],bibleContext:{},bibleDocs:{},theologyTopics:[],bibleSubs:[],taskNotes:'',buyList:[],gymLogs:[],dietLogs:[],dietTargets:{},dietNotes:'',dietIngredients:[],dietFoodLib:[],bjjPages:[],bjjDocs:{},uniNotes:{pages:[],docs:{}},chessNotes:'',chessPages:[],chessDocs:{}};
+  recurring:[],startBalance:0,fixedBlocks:[],patients:{},patientLogs:[],bjjLogs:[],bjjPoints:[],bjjEscapes:[],bjjPositions:[],bibleNotes:[],bibleContext:{},bibleDocs:{},theologyTopics:[],bibleSubs:[],taskNotes:'',buyList:[],gymLogs:[],dietLogs:[],dietTargets:{},dietNotes:'',dietIngredients:[],dietFoodLib:[],bjjPages:[],bjjDocs:{},uniNotes:{pages:[],docs:{}},mail:{clientId:'',profile:'',email:''},chessNotes:'',chessPages:[],chessDocs:{}};
 let S=load();
 migrateCube();
 let editId=null;
@@ -1638,6 +1682,7 @@ document.querySelectorAll('.nav-item').forEach(b=>b.onclick=()=>{
   document.getElementById('sec-'+n).classList.add('active');
   if(n==='calendar')renderCal();
   if(n==='today')renderToday();
+  if(n==='mail')mailOpen();
   document.querySelector('.app').classList.remove('nav-open');
 });
 
@@ -3608,7 +3653,7 @@ function renderToday(){
 }
 
 /* ============ SHARED RENDER ============ */
-function renderAll(){renderWeek();renderOverdue();renderTasks();renderUni();renderPatientLogs();renderBjjLogs();renderBjjPoints();renderEscapes();renderBjjHub();renderBibleNotes();renderBookPage();renderTopicPage();renderSubPage();renderBjjPage();renderNotes();renderChess();renderChessHub();renderChessPage();renderGym();renderGymHub();renderDiet();renderHobbies();renderRecurring();renderForecast();renderBuyList();renderToday();
+function renderAll(){renderWeek();renderOverdue();renderTasks();renderUni();renderPatientLogs();renderBjjLogs();renderBjjPoints();renderEscapes();renderBjjHub();renderBibleNotes();renderBookPage();renderTopicPage();renderSubPage();renderBjjPage();renderNotes();renderMail();renderChess();renderChessHub();renderChessPage();renderGym();renderGymHub();renderDiet();renderHobbies();renderRecurring();renderForecast();renderBuyList();renderToday();
   if(document.getElementById('sec-calendar').classList.contains('active'))renderCal();
   const sv=localStorage.getItem(KEY+'_saved');
   document.getElementById('last-saved').textContent=sv?'Last saved: '+new Date(sv).toLocaleString():'';
@@ -4267,6 +4312,226 @@ function renderSync(){
       </div>`;
   }
 }
+/* ============ EMAIL (Gmail read-only + AI triage and reply drafts) ============
+   Gmail is read straight from Google in this browser with a read-only sign-in (nothing can be sent or changed).
+   Sender/subject/preview go to the mail-ai server function to be rated; a full email is sent only when you
+   click Draft reply. Email text is always shown escaped, never as HTML. */
+const MAIL_KEY=KEY+'_mail',GTOK_KEY=KEY+'_gtok',GMAIL_SCOPE='https://www.googleapis.com/auth/gmail.readonly';
+var mail={msgs:[],triage:{},drafts:{},at:''};
+try{mail=Object.assign(mail,JSON.parse(localStorage.getItem(MAIL_KEY)||'{}'));}catch(_){}
+var mailUI={busy:'',err:'',ai:'',open:{},instr:{},drafting:{},showSetup:false};
+function mailCfg(){if(!S.mail||typeof S.mail!=='object')S.mail={clientId:'',profile:'',email:''};return S.mail;}
+function mailStore(){
+  const ids=new Set(mail.msgs.map(m=>m.id));
+  ['triage','drafts'].forEach(k=>Object.keys(mail[k]).forEach(id=>{if(!ids.has(id))delete mail[k][id];}));
+  try{localStorage.setItem(MAIL_KEY,JSON.stringify(mail));}catch(_){}
+}
+function gTok(){try{const t=JSON.parse(localStorage.getItem(GTOK_KEY)||'null');return t&&t.exp>Date.now()+30000?t:null;}catch(_){return null;}}
+let gisP=null;
+function loadGis(){
+  if(window.google&&google.accounts&&google.accounts.oauth2)return Promise.resolve();
+  if(!gisP)gisP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.async=true;
+    sc.onload=()=>res();sc.onerror=()=>{gisP=null;rej(new Error('Couldn\'t load Google sign-in. Check your connection or content blocker.'));};document.head.appendChild(sc);});
+  return gisP;
+}
+/* opens Google's own sign-in window; must be started by a click */
+async function mailConnect(){
+  const cfg=mailCfg();if(!cfg.clientId){mailUI.showSetup=true;renderMail();return;}
+  mailUI.err='';
+  try{
+    await loadGis();
+    await new Promise((res,rej)=>{
+      const tc=google.accounts.oauth2.initTokenClient({client_id:cfg.clientId,scope:GMAIL_SCOPE,hint:cfg.email||undefined,
+        callback:r=>{if(r.error)return rej(new Error(r.error_description||r.error));
+          if(!String(r.scope||'').includes('gmail.readonly'))return rej(new Error('Gmail access wasn\'t granted. Tick the Gmail box on Google\'s screen and try again.'));
+          localStorage.setItem(GTOK_KEY,JSON.stringify({token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000}));res();},
+        error_callback:e=>rej(new Error(e&&e.type==='popup_closed'?'Sign-in window was closed.':e&&e.type==='popup_failed_to_open'?'Your browser blocked the sign-in window. Allow pop-ups for this site and try again.':'Google sign-in failed.'))});
+      tc.requestAccessToken({prompt:''});
+    });
+    await mailRefresh(true);
+  }catch(e){mailUI.err=e.message||String(e);renderMail();}
+}
+function mailDisconnect(){
+  if(!confirm('Disconnect Gmail on this device? The emails cached here are cleared. Nothing changes in Gmail.'))return;
+  const t=gTok();try{if(t&&window.google)google.accounts.oauth2.revoke(t.token,()=>{});}catch(_){}
+  localStorage.removeItem(GTOK_KEY);mail={msgs:[],triage:{},drafts:{},at:''};localStorage.removeItem(MAIL_KEY);
+  mailUI={busy:'',err:'',ai:'',open:{},instr:{},drafting:{},showSetup:false};renderMail();
+}
+async function gmailApi(path){
+  const t=gTok();if(!t)throw new Error('signin');
+  const r=await fetch('https://gmail.googleapis.com/gmail/v1/users/me/'+path,{headers:{Authorization:'Bearer '+t.token}});
+  if(r.status===401){localStorage.removeItem(GTOK_KEY);throw new Error('signin');}
+  if(!r.ok){const j=await r.json().catch(()=>({}));throw new Error((j.error&&j.error.message)||('Gmail error '+r.status));}
+  return r.json();
+}
+async function mailAi(body){
+  const r=await fetch(SUPA_URL+'/functions/v1/mail-ai',{method:'POST',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(Object.assign({code:syncCode,profile:mailCfg().profile||''},body))});
+  const j=await r.json().catch(()=>({}));
+  if(r.status===404)throw Object.assign(new Error('The AI part isn\'t deployed on the server yet.'),{setup:true});
+  if(!r.ok)throw Object.assign(new Error(j.error==='code'?'Your sync code wasn\'t recognised by the server.':(j.error||('AI service error '+r.status))),{setup:!!j.setup});
+  return j;
+}
+const mailHdr=(m,n)=>{const h=((m.payload&&m.payload.headers)||[]).find(x=>x.name.toLowerCase()===n.toLowerCase());return h?h.value:'';};
+const mailName=f=>{const m=/^\s*"?([^"<]*?)"?\s*<[^>]+>\s*$/.exec(f||'');return (m&&m[1].trim())||(f||'').replace(/[<>]/g,'').trim()||'(unknown sender)';};
+async function pool(items,n,fn){const out=[];let i=0;await Promise.all([...Array(Math.min(n,items.length))].map(async()=>{while(i<items.length){const k=i++;out[k]=await fn(items[k]);}}));return out;}
+async function mailRefresh(force){
+  if(mailUI.busy||!gTok())return;
+  if(!force&&mail.at&&Date.now()-new Date(mail.at).getTime()<5*60*1000)return;
+  mailUI.busy='Checking Gmail…';mailUI.err='';renderMail();
+  try{
+    const cfg=mailCfg();
+    const prof=await gmailApi('profile');
+    if(prof.emailAddress&&prof.emailAddress!==cfg.email){cfg.email=prof.emailAddress;save();}
+    const list=await gmailApi('messages?maxResults=40&q='+encodeURIComponent('in:inbox newer_than:14d -category:promotions -category:social'));
+    const metas=await pool((list.messages||[]).map(m=>m.id),8,id=>gmailApi('messages/'+id+'?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date'));
+    mail.msgs=metas.map(m=>({id:m.id,threadId:m.threadId,from:mailHdr(m,'From'),subject:mailHdr(m,'Subject')||'(no subject)',snippet:m.snippet||'',
+      ts:+m.internalDate||0,unread:(m.labelIds||[]).includes('UNREAD'),gImportant:(m.labelIds||[]).includes('IMPORTANT')})).sort((a,b)=>b.ts-a.ts);
+    mail.at=new Date().toISOString();mailStore();
+    await mailTriage();
+  }catch(e){mailUI.err=e.message==='signin'?'':(e.message||String(e));}
+  mailUI.busy='';renderMail();
+}
+/* rate anything not rated yet; if the AI isn't available, fall back to Gmail's own "important" marker */
+async function mailTriage(){
+  const todo=mail.msgs.filter(m=>!mail.triage[m.id]);mailUI.ai='';
+  if(!todo.length||!syncOn()){if(!syncOn())mailUI.ai='Turn on Cloud sync to enable AI ratings and drafts.';return;}
+  mailUI.busy='Rating '+todo.length+' email'+(todo.length>1?'s':'')+'…';renderMail();
+  try{
+    for(let i=0;i<todo.length;i+=20){
+      const j=await mailAi({action:'triage',emails:todo.slice(i,i+20).map(m=>({id:m.id,from:m.from,subject:m.subject,snippet:m.snippet,unread:m.unread,date:new Date(m.ts).toISOString()}))});
+      (j.results||[]).forEach(r=>{mail.triage[r.id]={level:r.level,reason:r.reason,needsReply:!!r.needsReply};});
+      mailStore();renderMail();
+    }
+  }catch(e){mailUI.ai=e.message||String(e);}
+}
+function mailLevel(m){const t=mail.triage[m.id];if(t)return t;
+  return {level:m.gImportant&&m.unread?'high':m.unread?'medium':'low',reason:m.gImportant?'Gmail marked this as important.':'',needsReply:false,fallback:true};}
+const b64u=sx=>{const bin=atob(sx.replace(/-/g,'+').replace(/_/g,'/'));return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)));};
+/* plain text of a full Gmail message: prefer text/plain, else strip the HTML part */
+function mailBody(payload){
+  let plain='',html='';
+  (function walk(p){if(!p)return;const d=p.body&&p.body.data;
+    if(d&&p.mimeType==='text/plain'&&!plain)plain=b64u(d);else if(d&&p.mimeType==='text/html'&&!html)html=b64u(d);
+    (p.parts||[]).forEach(walk);})(payload);
+  if(plain.trim())return plain.trim();
+  if(!html)return '';
+  const doc=new DOMParser().parseFromString(html,'text/html');doc.querySelectorAll('script,style,head').forEach(n=>n.remove());
+  return (doc.body?doc.body.innerText||doc.body.textContent:'').replace(/\n{3,}/g,'\n\n').trim();
+}
+const MAIL_BODY_MAX=24000;
+async function mailDraft(id){
+  const m=mail.msgs.find(x=>x.id===id);if(!m||mailUI.drafting[id])return;
+  if(!gTok()){mailUI.err='';renderMail(true);return;}
+  mailUI.drafting[id]=true;mailUI.open[id]=true;delete mailUI.open['e:'+id];renderMail(true);
+  try{
+    const full=await gmailApi('messages/'+id+'?format=full');
+    let body=mailBody(full.payload)||m.snippet;
+    if(body.length>MAIL_BODY_MAX){
+      if(!confirm('This email is very long. Draft a reply from the first part only ('+MAIL_BODY_MAX.toLocaleString()+' of '+body.length.toLocaleString()+' characters)?')){mailUI.drafting[id]=false;renderMail(true);return;}
+      body=body.slice(0,MAIL_BODY_MAX)+'\n\n[The rest of this email was left out because of its length.]';
+    }
+    const j=await mailAi({action:'draft',instruction:mailUI.instr[id]||'',email:{from:m.from,to:mailHdr(full,'To'),subject:m.subject,date:new Date(m.ts).toString(),body}});
+    mail.drafts[id]=j.draft;mailStore();
+  }catch(e){mailUI.open['e:'+id]=e.message==='signin'?'Gmail sign-in expired. Reconnect at the top of the page, then try again.':(e.message||String(e));}
+  mailUI.drafting[id]=false;renderMail(true);
+}
+function mailToggleDraft(id){mailUI.open[id]=!mailUI.open[id];renderMail(true);}
+async function mailCopy(id,btn){
+  const ta=document.getElementById('md-'+id);const text=ta?ta.value:(mail.drafts[id]||'');
+  try{await navigator.clipboard.writeText(text);}catch(_){if(ta){ta.select();document.execCommand('copy');}}
+  if(btn){const o=btn.textContent;btn.textContent='Copied ✓';setTimeout(()=>btn.textContent=o,1400);}
+}
+const mailLink=m=>'https://mail.google.com/mail/?authuser='+encodeURIComponent(mailCfg().email||'')+'#all/'+encodeURIComponent(m.threadId||m.id);
+const mailAge=ts=>{const d=(Date.now()-ts)/60000;return d<60?Math.max(1,Math.round(d))+'m ago':d<1440?Math.round(d/60)+'h ago':d<2880?'Yesterday':new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short'});};
+function mailSaveSetup(){
+  const cfg=mailCfg();const id=(document.getElementById('mail-cid').value||'').trim();
+  if(id&&!/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/i.test(id)){alert('That doesn\'t look like a Google client ID. It ends in .apps.googleusercontent.com');return;}
+  cfg.clientId=id;cfg.profile=(document.getElementById('mail-profile').value||'').trim().slice(0,2000);mailUI.showSetup=!id;save();
+}
+function mailOpen(){renderMail(true);if(gTok())mailRefresh();}
+function renderMail(force){
+  if(typeof mailUI==='undefined'||!mailUI)return; // called before this block has loaded
+  const list=document.getElementById('mail-list');if(!list)return;
+  const cfg=mailCfg(),tok=gTok();
+  // badge: unread emails rated high
+  const hot=mail.msgs.filter(m=>m.unread&&mail.triage[m.id]&&mail.triage[m.id].level==='high').length;
+  const bd=document.getElementById('badge-mail');if(bd){bd.textContent=hot;bd.classList.toggle('hidden',!hot);}
+  if(!document.getElementById('sec-mail').classList.contains('active'))return;
+  const ae=document.activeElement;
+  if(!force&&ae&&ae.closest&&ae.closest('#sec-mail')&&/^(TEXTAREA|INPUT)$/.test(ae.tagName))return; // don't redraw under the cursor
+  document.getElementById('mail-sub').textContent=cfg.email?cfg.email+(mail.at?' · checked '+new Date(mail.at).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):''):'What needs your attention, with replies drafted on request.';
+  document.getElementById('mail-actions').innerHTML=!cfg.clientId?'':
+    (tok?`<button class="btn ghost" onclick="mailRefresh(true)" ${mailUI.busy?'disabled':''}>${mailUI.busy?esc(mailUI.busy):'Refresh'}</button>`:`<button class="btn" onclick="mailConnect()">${mail.msgs.length?'Reconnect Gmail':'Connect Gmail'}</button>`)+
+    `<button class="btn ghost" onclick="mailUI.showSetup=!mailUI.showSetup;renderMail(true)">Settings</button>`;
+  const banners=[];
+  if(mailUI.err)banners.push(`<div class="mail-banner err">${esc(mailUI.err)}</div>`);
+  if(cfg.clientId&&!tok&&mail.msgs.length)banners.push(`<div class="mail-banner warn">Gmail sign-in has expired (Google limits it to about an hour). Showing what was loaded last time.</div>`);
+  if(mailUI.ai)banners.push(`<div class="mail-banner warn">${esc(mailUI.ai)} Emails are sorted by Gmail's own "important" marker until this is fixed.</div>`);
+  document.getElementById('mail-banner').innerHTML=banners.join('');
+  // setup card
+  const setup=document.getElementById('mail-setup');
+  if(!cfg.clientId||mailUI.showSetup){
+    const origin=location.origin;
+    setup.innerHTML=`<div class="card accent-top mail-setup" style="margin-bottom:18px">
+      <h3><span class="hic c-blue">${I.use('i-settings')}</span> ${cfg.clientId?'Email settings':'Set up Gmail'}</h3>
+      ${cfg.clientId?'':`<p style="font-size:13px;color:var(--muted);margin-bottom:10px">One-off setup in Google Cloud so this dashboard is allowed to ask you to sign in. It's free. Access is read-only: the dashboard can never send, delete or change email.</p>
+      <ol>
+        <li>Go to <code>console.cloud.google.com</code>, signed in with your personal Gmail, and create a project (any name).</li>
+        <li><b>APIs &amp; Services → Library</b>: find <b>Gmail API</b> and click <b>Enable</b>.</li>
+        <li><b>APIs &amp; Services → OAuth consent screen</b> (also called Google Auth Platform): choose <b>External</b>, fill in the app name and your email, and add your own Gmail address under <b>Test users</b> (Audience).</li>
+        <li><b>Data access</b>: add the scope <code>.../auth/gmail.readonly</code>.</li>
+        <li><b>Clients → Create client</b>: type <b>Web application</b>. Under <b>Authorised JavaScript origins</b> add <code>${esc(origin)}</code>.</li>
+        <li>Copy the <b>Client ID</b> and paste it below. (It is not a secret. Never paste a client <i>secret</i> here; it isn't needed.)</li>
+      </ol>`}
+      <label>Google client ID</label>
+      <input id="mail-cid" value="${esc(cfg.clientId)}" placeholder="1234567890-abc123.apps.googleusercontent.com" autocomplete="off">
+      <label>About you (helps rate importance and match your tone)</label>
+      <textarea id="mail-profile" rows="4" placeholder="e.g. I'm Ryan, a dentistry student in Sydney who also runs a tutoring business. Uni, placement and parent emails matter most. I write casually to friends and politely to staff and parents. Sign off as Ryan.">${esc(cfg.profile)}</textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn" onclick="mailSaveSetup()">Save</button>
+        ${cfg.clientId?`<button class="btn ghost" onclick="mailUI.showSetup=false;renderMail(true)">Close</button>`:''}
+        ${tok||mail.msgs.length?`<button class="btn ghost" style="color:var(--red);margin-left:auto" onclick="mailDisconnect()">Disconnect Gmail on this device</button>`:''}
+      </div>
+    </div>`;
+  }else setup.innerHTML='';
+  if(!cfg.clientId){list.innerHTML='';return;}
+  if(!mail.msgs.length){list.innerHTML=`<div class="card">${empty('i-mail',tok?(mailUI.busy?esc(mailUI.busy):'No recent emails in your inbox.'):'Click Connect Gmail to sign in with Google. You\'ll be asked to allow read-only access.')}</div>`;return;}
+  const item=m=>{const t=mailLevel(m),open=!!mailUI.open[m.id],dr=mail.drafts[m.id],busy=!!mailUI.drafting[m.id],err=mailUI.open['e:'+m.id];
+    return `<div class="mail-it ${t.level} ${m.unread?'unread':''}">
+      <div class="mail-top"><span class="mail-from">${esc(mailName(m.from))}</span><span class="mail-age">${mailAge(m.ts)}</span></div>
+      <div class="mail-subj">${esc(m.subject)}</div>
+      <div class="mail-snip">${esc(m.snippet)}</div>
+      ${t.reason?`<div class="mail-why">${esc(t.reason)}</div>`:''}
+      <div class="mail-foot">
+        ${m.unread?'<span class="mail-chip new">Unread</span>':''}${t.needsReply?'<span class="mail-chip reply">Needs a reply</span>':''}
+        <span style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn ghost sm" onclick="mailToggleDraft('${m.id}')">${open?'Hide draft':dr?'Show draft':'Draft reply'}</button>
+          <a class="btn ghost sm" href="${esc(mailLink(m))}" target="_blank" rel="noopener noreferrer">Open in Gmail</a>
+        </span>
+      </div>
+      ${open?`<div class="mail-draft">
+        <input id="mi-${m.id}" value="${esc(mailUI.instr[m.id]||'')}" placeholder="What do you want to say? (optional) e.g. yes, but I can only do after 4pm" oninput="mailUI.instr['${m.id}']=this.value" onkeydown="if(event.key==='Enter')mailDraft('${m.id}')">
+        ${dr!=null?`<textarea id="md-${m.id}" oninput="mail.drafts['${m.id}']=this.value;mailStore()">${esc(dr)}</textarea>`:''}
+        ${err?`<div class="mail-banner err" style="margin:8px 0 0">${esc(err)}</div>`:''}
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px">
+          <button class="btn sm" onclick="mailDraft('${m.id}')" ${busy?'disabled':''}>${busy?'Writing…':dr!=null?'Rewrite':'Write draft'}</button>
+          ${dr!=null?`<button class="btn ghost sm" onclick="mailCopy('${m.id}',this)">Copy</button><a class="btn ghost sm" href="${esc(mailLink(m))}" target="_blank" rel="noopener noreferrer">Open in Gmail to reply</a>`:''}
+        </div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:8px">Writing a draft sends this email's text to the AI service. Nothing is sent to the other person until you send it yourself from Gmail.</div>
+      </div>`:''}
+    </div>`;};
+  const grp=(lv,label)=>{const ms=mail.msgs.filter(m=>mailLevel(m).level===lv);if(!ms.length)return '';
+    const inner=ms.map(item).join('');
+    return lv==='low'?`<details class="mail-grp" ${mailUI.open.low?'open':''} ontoggle="mailUI.open.low=this.open"><summary class="mail-gh" style="cursor:pointer">${label}<span class="n">${ms.length}</span></summary>${inner}</details>`
+      :`<div class="mail-grp"><div class="mail-gh">${label}<span class="n">${ms.length}</span></div>${inner}</div>`;};
+  const pending=mail.msgs.some(m=>!mail.triage[m.id])&&mailUI.busy;
+  list.innerHTML=(pending?`<div class="mail-banner">${esc(mailUI.busy)}</div>`:'')+
+    (grp('high','Needs attention')||`<div class="mail-grp"><div class="mail-gh">Needs attention<span class="n">0</span></div><div class="card" style="padding:16px;font-size:13px;color:var(--muted)">Nothing urgent in the last two weeks.</div></div>`)+
+    grp('medium','Worth a look')+grp('low','Everything else');
+}
+
 /* ============ GOOGLE CALENDAR (read-only, via the gcal server function) ============
    The secret iCal address is sent to the server once and stored there against the sync code —
    it is never kept in this page. Events are cached per device for instant loads. */
