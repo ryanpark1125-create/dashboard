@@ -436,6 +436,17 @@
   input.doc-title:hover{background:var(--soft-bg);box-shadow:0 0 0 6px var(--soft-bg)}
   input.doc-title:focus{background:none;box-shadow:none}
   .doc-title::placeholder{color:var(--muted);opacity:.6}
+  .doc-desc{display:block;width:100%;border:none;background:none;font:inherit;font-size:14px;color:var(--ink-soft);padding:0;margin-top:6px;outline:none;border-radius:6px}
+  .doc-desc::placeholder{color:var(--muted);opacity:.7}
+  .doc-desc:hover{background:var(--soft-bg);box-shadow:0 0 0 4px var(--soft-bg)}
+  .doc-desc:focus{background:none;box-shadow:none}
+  .doc-row.plain .dot{visibility:hidden}
+  .doc-sep{height:1px;background:var(--line-soft);margin:6px 4px}
+  .notes-rail{position:sticky;top:18px;display:grid;gap:12px;max-height:calc(100dvh - 36px);overflow:auto;align-content:start}
+  .notes-rail .notes-side{position:static;max-height:none;overflow:visible}
+  .notes-main .doc-main .nt-children{margin:0 0 16px}
+  .notes-main .doc-main .nt-back{margin-top:28px}
+  @media(max-width:900px){.notes-rail{position:static;max-height:none;overflow:visible}}
   .doc-meta{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted);margin:8px 0 20px}
   .doc-save{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);transition:color .2s;white-space:nowrap}
   .doc-save.ok{color:var(--green)}
@@ -1277,30 +1288,34 @@
         <div class="hub" id="nt-cards"></div>
       </div>
       <div class="notes-wrap" id="nt-wrap" hidden>
-        <aside class="notes-side" id="notes-side">
-          <button class="btn ghost sm" style="width:100%;justify-content:flex-start;margin-bottom:10px" onclick="goNotesHome()">← All disciplines</button>
-          <input class="pt-input nt-search" id="nt-search" placeholder="Search all notes…" oninput="renderNotesTree()">
-          <div class="nt-tree" id="nt-tree"></div>
+        <aside class="notes-rail">
+          <div class="notes-side" id="notes-side">
+            <button class="btn ghost sm" style="width:100%;justify-content:flex-start;margin-bottom:10px" onclick="goNotesHome()">← All disciplines</button>
+            <input class="pt-input nt-search" id="nt-search" placeholder="Search all notes…" oninput="renderNotesTree()">
+            <div class="nt-tree" id="nt-tree"></div>
+          </div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="nt-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
         </aside>
         <div class="notes-main">
-          <div class="card accent-top nt-page" id="nt-page">
-            <div class="nt-crumbs" id="nt-crumbs"></div>
-            <div class="nt-head">
-              <input class="nt-title" id="nt-title" placeholder="Untitled" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('nt-doc').focus();}" onblur="renameNote(currentNote,this.value)">
-              <div class="nt-tools">
-                <button class="btn ghost sm" onclick="addNotePage(currentNote)" title="New page inside this one">+ Subpage</button>
-                <button class="btn ghost sm" onclick="openMoveNote(currentNote)">Move</button>
-                <button class="btn ghost sm" style="color:var(--red)" onclick="deleteNote(currentNote)">Delete</button>
-              </div>
+          <div class="doc-top">
+            <div class="doc-crumbs" id="nt-crumbs"></div>
+            <div class="doc-nav">
+              <button class="btn ghost sm" onclick="addNotePage(currentNote)" title="New page inside this one">+ Subpage</button>
+              <button class="btn ghost sm" onclick="openMoveNote(currentNote)">Move</button>
+              <button class="btn ghost sm" style="color:var(--red)" onclick="deleteNote(currentNote)">Delete</button>
             </div>
-            <div class="nt-meta" id="nt-meta"></div>
+          </div>
+          <article class="doc-main" id="nt-page"><div class="doc-col">
+            <input class="doc-title" id="nt-title" placeholder="Untitled" autocomplete="off" title="Click to rename" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('nt-doc').focus();}" onblur="renameNote(currentNote,this.value)">
+            <div class="doc-meta"><span id="nt-meta"></span><span class="doc-save" id="nt-doc-save"></span></div>
             <div class="nt-children" id="nt-children"></div>
-            <div class="toc" id="nt-toc" style="display:none"></div>
-            <div class="rich"><div class="rich-bar" id="nt-doc-bar"></div>
-              <div class="rich-in page" id="nt-doc" contenteditable="true" data-ph="Write here — # heading, - bullet, [[ to link another note. Select a word and press ⌘K to link it."
+            <div class="rich doc-editor"><div class="rich-bar doc-bar" id="nt-doc-bar"></div>
+              <div class="rich-in page doc-body" id="nt-doc" contenteditable="true" data-ph="Start writing. # heading, - bullet, [[ to link another note. Select a word and press ⌘K to link it."
                 oninput="noteInput('nt-doc')" onkeydown="noteKey(event,'nt-doc')" onblur="saveNoteDoc()" onclick="noteClick(event)"></div></div>
             <div class="nt-back" id="nt-back"></div>
-          </div>
+          </div></article>
         </div>
       </div>
       <div class="nt-pop" id="nt-pop" hidden></div>
@@ -1318,7 +1333,7 @@
           <input class="nt-title nt-peek-title" id="nt-peek-title" placeholder="Untitled" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('nt-peek-doc').focus();}" onblur="renameNote(peekId,this.value)">
           <div class="nt-meta" id="nt-peek-meta"></div>
           <div class="rich"><div class="rich-bar" id="nt-peek-doc-bar"></div>
-            <div class="rich-in grow nt-peek-doc" id="nt-peek-doc" contenteditable="true" data-ph="Notes about this term…"
+            <div class="rich-in grow nt-peek-doc doc-body" id="nt-peek-doc" contenteditable="true" data-ph="Notes about this term…"
               oninput="noteInput('nt-peek-doc')" onkeydown="noteKey(event,'nt-peek-doc')" onblur="savePeekDoc()" onclick="noteClick(event)"></div></div>
           <div class="nt-back" id="nt-peek-back"></div>
         </div>
@@ -1345,21 +1360,29 @@
 
     <!-- BJJ · CUSTOM PAGE -->
     <section class="section" id="sec-bjjpage">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-amber"><svg class="ico"><use href="#i-folder"/></svg></div>
-          <div><h2 id="bp-title">Page</h2><div class="sub" id="bp-sub"></div></div></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" onclick="goSection('bjj','bjj')">← BJJ</button>
-          <button class="btn ghost" onclick="openBjjPageModal(currentBjjPage)">Edit page</button>
-        </div>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goSection('bjj','bjj')">BJJ</button><i>/</i><b id="bp-crumb"></b></div>
+        <div class="doc-nav"><button class="btn ghost sm" style="color:var(--red)" onclick="collDelete('bjj')">Delete page</button></div>
       </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-amber"><svg class="ico"><use href="#i-folder"/></svg></span> Notes
-          <span class="count" id="bp-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="bp-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="bp-doc-bar"></div>
-          <div class="rich-in page" id="bp-doc" contenteditable="true" oninput="buildTOC('bp-doc','bp-toc')" data-ph="Write here — # for a heading, - for a bullet."
-            onkeydown="richKey(event,'bp-doc')" onblur="saveBjjDoc()"></div></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <input class="doc-title" id="bp-title" placeholder="Untitled page" autocomplete="off" title="Click to rename"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('bp-doc').focus();}" onblur="collRename('bjj',this.value)">
+          <input class="doc-desc" id="bp-desc" placeholder="Add a short description" autocomplete="off"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('bp-doc').focus();}" onblur="collDesc('bjj',this.value)">
+          <div class="doc-meta"><span id="bp-sub"></span><span class="doc-save" id="bp-doc-save"></span></div>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="bp-doc-bar"></div>
+            <div class="rich-in page doc-body" id="bp-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('bp-doc','bp-toc');docTouch('bp-doc')" onkeydown="richKey(event,'bp-doc')" onblur="docFlush('bp-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box"><div class="doc-box-h">BJJ</div>
+            <div id="bp-list"></div>
+            <input class="doc-add" id="bp-add" placeholder="+ New page" autocomplete="off" title="e.g. Guard passing" onkeydown="if(event.key==='Enter')collAdd('bjj','bp-add')"></div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="bp-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
@@ -1524,38 +1547,53 @@
 
     <!-- CHESS · CUSTOM PAGE -->
     <section class="section" id="sec-chesspage">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-amber"><svg class="ico"><use href="#i-folder"/></svg></div>
-          <div><h2 id="cp-title">Page</h2><div class="sub" id="cp-sub"></div></div></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" onclick="goSection('chess','chess')">← Chess</button>
-          <button class="btn ghost" onclick="openChessPageModal(currentChessPage)">Edit page</button>
-        </div>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goSection('chess','chess')">Chess</button><i>/</i><b id="cp-crumb"></b></div>
+        <div class="doc-nav"><button class="btn ghost sm" style="color:var(--red)" onclick="collDelete('chess')">Delete page</button></div>
       </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-amber"><svg class="ico"><use href="#i-folder"/></svg></span> Notes
-          <span class="count" id="cp-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="cp-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="cp-doc-bar"></div>
-          <div class="rich-in page" id="cp-doc" contenteditable="true" oninput="buildTOC('cp-doc','cp-toc')" data-ph="Write here — # for a heading, - for a bullet."
-            onkeydown="richKey(event,'cp-doc')" onblur="saveChessDoc()"></div></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <input class="doc-title" id="cp-title" placeholder="Untitled page" autocomplete="off" title="Click to rename"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('cp-doc').focus();}" onblur="collRename('chess',this.value)">
+          <input class="doc-desc" id="cp-desc" placeholder="Add a short description" autocomplete="off"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('cp-doc').focus();}" onblur="collDesc('chess',this.value)">
+          <div class="doc-meta"><span id="cp-sub"></span><span class="doc-save" id="cp-doc-save"></span></div>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="cp-doc-bar"></div>
+            <div class="rich-in page doc-body" id="cp-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('cp-doc','cp-toc');docTouch('cp-doc')" onkeydown="richKey(event,'cp-doc')" onblur="docFlush('cp-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box"><div class="doc-box-h">Chess</div>
+            <div id="cp-list"></div>
+            <input class="doc-add" id="cp-add" placeholder="+ New page" autocomplete="off" title="e.g. Openings" onkeydown="if(event.key==='Enter')collAdd('chess','cp-add')"></div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="cp-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
     <!-- CHESS · MAIN NOTES -->
     <section class="section" id="sec-chessnotes">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-amber"><svg class="ico"><use href="#i-chess"/></svg></div>
-          <div><h2>General notes</h2><div class="sub">Anything that doesn't belong on its own page.</div></div></div>
-        <button class="btn ghost" onclick="goSection('chess','chess')">← Chess</button>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goSection('chess','chess')">Chess</button><i>/</i><b>General notes</b></div>
       </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-amber"><svg class="ico"><use href="#i-chess"/></svg></span> Notes
-          <span class="count" id="chess-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="chess-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="chess-doc-bar"></div>
-          <div class="rich-in page" id="chess-doc" contenteditable="true" oninput="buildTOC('chess-doc','chess-toc')" data-ph="Write here — # for a heading, - for a bullet. Paste in diagrams or add tables for opening lines."
-            onkeydown="richKey(event,'chess-doc')" onblur="saveChess()"></div></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <h1 class="doc-title">General notes</h1>
+          <div class="doc-meta"><span id="chess-sub"></span><span class="doc-save" id="chess-doc-save"></span></div>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="chess-doc-bar"></div>
+            <div class="rich-in page doc-body" id="chess-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('chess-doc','chess-toc');docTouch('chess-doc')" onkeydown="richKey(event,'chess-doc')" onblur="docFlush('chess-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box"><div class="doc-box-h">Chess</div>
+            <div id="chess-list"></div>
+            <input class="doc-add" id="chess-add" placeholder="+ New page" autocomplete="off" title="e.g. Openings" onkeydown="if(event.key==='Enter')collAdd('chess','chess-add')"></div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="chess-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
@@ -2722,6 +2760,7 @@ function openNote(id){
   if(!noteById(id))return;
   if(currentNote&&currentNote!==id)saveNoteDoc(); // flush the page you're leaving
   if(peekId===id)closePeek();
+  if(currentNote!==id)docStatus('nt-doc','');
   currentNote=id;ntReveal(id);renderNotes();goSection('notes','notes');
 }
 function goNotesHome(){saveNoteDoc();closePeek();currentNote='';renderNotes();}
@@ -2767,7 +2806,9 @@ let ntSaveT=null;
 function noteInput(edId){
   edId=edId||'nt-doc';
   if(edId==='nt-doc')buildTOC('nt-doc','nt-toc');
-  ntLinkPopup(edId);clearTimeout(ntSaveT);ntSaveT=setTimeout(edId==='nt-doc'?saveNoteDoc:savePeekDoc,900);
+  ntLinkPopup(edId);clearTimeout(ntSaveT);
+  if(edId==='nt-doc'){docStatus('nt-doc','Editing…');ntSaveT=setTimeout(()=>{saveNoteDoc();docStatus('nt-doc','Saved ✓',true);},900);}
+  else ntSaveT=setTimeout(savePeekDoc,900);
 }
 /* a link in either editor: click peeks it in the side panel, ⌘-click opens it as the page */
 function noteClick(e){const a=e.target.closest('a.nlink');if(!a)return;e.preventDefault();
@@ -2938,7 +2979,7 @@ function renderNotePage(){
   home.hidden=true;wrap.hidden=false;
   if(!document.getElementById('nt-doc-bar').children.length)richBar('nt-doc-bar','nt-doc');
   const anc=noteAncestors(p.id);
-  document.getElementById('nt-crumbs').innerHTML=[`<button onclick="goNotesHome()">Notes</button>`,...anc.map(a=>`<button onclick="openNote('${a.id}')">${esc(a.title)}</button>`)].join('<span class="sep">/</span>')+`<span class="sep">/</span><span>${esc(p.title)}</span>`;
+  document.getElementById('nt-crumbs').innerHTML=[`<button onclick="goNotesHome()">Notes</button>`,...anc.map(a=>`<button onclick="openNote('${a.id}')">${esc(a.title)}</button>`)].join('<i>/</i>')+`<i>/</i><b>${esc(p.title)}</b>`;
   const t=document.getElementById('nt-title');if(document.activeElement!==t)t.value=p.title;
   const doc=noteDocs()[p.id]||'';const ed=document.getElementById('nt-doc');
   if(document.activeElement!==ed)ed.innerHTML=richHTML(doc);
@@ -2994,31 +3035,34 @@ function deleteChessPage(id){
   S.chessPages=chessPages().filter(x=>x.id!==id);delete chessDocs()[id];save();closeModal();
   if(currentChessPage===id){currentChessPage='';goSection('chess','chess');}
 }
-function openChessPage(id){currentChessPage=id;renderChessPage();goSection('chesspage','chess');}
+function openChessPage(id){currentChessPage=id;docStatus('cp-doc','');renderChessPage();goSection('chesspage','chess');}
 function saveChessDoc(){
-  if(!currentChessPage)return;const v=richVal('cp-doc');
+  if(!currentChessPage)return;const v=richVal('cp-doc'),old=chessDocs()[currentChessPage]||'';
+  if(v===old||(!hasContent(v)&&!old))return;
   if(hasContent(v))chessDocs()[currentChessPage]=v;else delete chessDocs()[currentChessPage];save();
 }
+const chessGeneralRow=cur=>`<div class="doc-row ${hasContent(S.chessNotes||'')?'has':''} ${cur?'cur':''}" onclick="goSection('chessnotes','chess')"><span class="dot"></span><span class="nm">General notes</span></div>`;
 function renderChessPage(){
   const el=document.getElementById('cp-doc');if(!el||!currentChessPage)return;
   const pg=chessPages().find(x=>x.id===currentChessPage);if(!pg)return;
   if(!document.getElementById('cp-doc-bar').children.length)richBar('cp-doc-bar','cp-doc');
   const doc=chessDocs()[pg.id]||'';
-  document.getElementById('cp-title').textContent=pg.name;
+  const t=document.getElementById('cp-title');if(document.activeElement!==t)t.value=pg.name;
+  const d=document.getElementById('cp-desc');if(document.activeElement!==d)d.value=pg.desc||'';
+  document.getElementById('cp-crumb').textContent=pg.name;
   if(document.activeElement!==el)el.innerHTML=richHTML(doc);
   buildTOC('cp-doc','cp-toc');
-  const w=wordCount(doc);
-  document.getElementById('cp-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
-  document.getElementById('cp-sub').textContent=pg.desc||(w?`${w} word${w===1?'':'s'}`:'Nothing written yet');
+  document.getElementById('cp-sub').textContent=wordsLabel(wordCount(doc));
+  document.getElementById('cp-list').innerHTML=chessGeneralRow(false)+collRows('chess',pg.id);
 }
-function saveChess(){const v=richVal('chess-doc');if(v===(S.chessNotes||''))return;S.chessNotes=hasContent(v)?v:'';save();}
+function saveChess(){const v=richVal('chess-doc');if(v===(S.chessNotes||'')||(!hasContent(v)&&!S.chessNotes))return;S.chessNotes=hasContent(v)?v:'';save();}
 function renderChess(){
   const el=document.getElementById('chess-doc');if(!el)return;
   if(!document.getElementById('chess-doc-bar').children.length)richBar('chess-doc-bar','chess-doc');
   if(document.activeElement!==el)el.innerHTML=richHTML(S.chessNotes||'');
   buildTOC('chess-doc','chess-toc');
-  const w=wordCount(S.chessNotes||'');
-  document.getElementById('chess-words').textContent=w?`${w.toLocaleString()} word${w===1?'':'s'}`:'';
+  document.getElementById('chess-sub').textContent=wordsLabel(wordCount(S.chessNotes||''));
+  document.getElementById('chess-list').innerHTML=chessGeneralRow(true)+collRows('chess','');
 }
 
 /* ============ HOBBIES OVERVIEW ============ */
@@ -3120,10 +3164,36 @@ function docStatus(fieldId,text,ok){const e=document.getElementById(fieldId+'-sa
 function docTouch(fieldId){docStatus(fieldId,'Editing…');clearTimeout(docTimers[fieldId]);docTimers[fieldId]=setTimeout(()=>docFlush(fieldId),1200);}
 function docFlush(fieldId){
   const pending=!!docTimers[fieldId];clearTimeout(docTimers[fieldId]);delete docTimers[fieldId];
-  if(fieldId==='bk-ctx')saveBookContext(richVal('bk-ctx'));else saveBibleDoc(fieldId);
+  if(fieldId==='bk-ctx')saveBookContext(richVal('bk-ctx'));
+  else if(fieldId==='bp-doc')saveBjjDoc();else if(fieldId==='cp-doc')saveChessDoc();else if(fieldId==='chess-doc')saveChess();
+  else saveBibleDoc(fieldId);
   if(pending)docStatus(fieldId,'Saved ✓',true);
 }
 function goBible(tab){setBibleTab(tab);goSection('bible','bible');}
+/* BJJ and Chess keep a simple list of named pages; these drive their document pages */
+const COLL={
+  bjj:{pre:'bp',pages:()=>bjjPages(),docs:()=>bjjDocs(),cur:()=>currentBjjPage,open:id=>openBjjPage(id),del:id=>deleteBjjPage(id)},
+  chess:{pre:'cp',pages:()=>chessPages(),docs:()=>chessDocs(),cur:()=>currentChessPage,open:id=>openChessPage(id),del:id=>deleteChessPage(id)}
+};
+const collRows=(kind,curId)=>{const c=COLL[kind];return c.pages().map(pg=>
+  `<div class="doc-row ${hasContent(c.docs()[pg.id]||'')?'has':''} ${pg.id===curId?'cur':''}" onclick="COLL.${kind}.open('${pg.id}')"><span class="dot"></span><span class="nm">${esc(pg.name)}</span></div>`).join('');};
+function collAdd(kind,inputId){
+  const c=COLL[kind],i=document.getElementById(inputId);const t=(i?i.value:'').trim();if(!t)return;
+  let pg=c.pages().find(x=>samePos(x.name,t));
+  if(!pg){pg={id:uid(),name:t,desc:''};c.pages().push(pg);}
+  i.value='';i.blur();save();c.open(pg.id);
+  setTimeout(()=>{const d=document.getElementById(c.pre+'-doc');if(d)d.focus();},80);
+}
+function collRename(kind,v){
+  const c=COLL[kind],pg=c.pages().find(x=>x.id===c.cur()),el=document.getElementById(c.pre+'-title');if(!pg)return;
+  const n=(v||'').trim();if(!n||n===pg.name){el.value=pg.name;return;}
+  pg.name=n;save();
+}
+function collDesc(kind,v){
+  const c=COLL[kind],pg=c.pages().find(x=>x.id===c.cur());if(!pg)return;
+  const n=(v||'').trim();if(n===(pg.desc||''))return;pg.desc=n;save();
+}
+function collDelete(kind){const c=COLL[kind];if(c.cur())c.del(c.cur());}
 const wordsLabel=w=>w?`${w.toLocaleString()} word${w===1?'':'s'}`:'Nothing written yet';
 const topicSubs=t=>bsubs().filter(x=>samePos(x.parent,t)).sort((a,b)=>a.name.localeCompare(b.name));
 /* a subpage row for the side rail */
@@ -3420,9 +3490,10 @@ function deleteBjjPage(id){
   S.bjjPages=bjjPages().filter(x=>x.id!==id);delete bjjDocs()[id];save();closeModal();
   if(currentBjjPage===id){currentBjjPage='';goSection('bjj','bjj');}
 }
-function openBjjPage(id){currentBjjPage=id;renderBjjPage();goSection('bjjpage','bjj');}
+function openBjjPage(id){currentBjjPage=id;docStatus('bp-doc','');renderBjjPage();goSection('bjjpage','bjj');}
 function saveBjjDoc(){
-  if(!currentBjjPage)return;const v=richVal('bp-doc');
+  if(!currentBjjPage)return;const v=richVal('bp-doc'),old=bjjDocs()[currentBjjPage]||'';
+  if(v===old||(!hasContent(v)&&!old))return;
   if(hasContent(v))bjjDocs()[currentBjjPage]=v;else delete bjjDocs()[currentBjjPage];save();
 }
 function renderBjjPage(){
@@ -3430,12 +3501,14 @@ function renderBjjPage(){
   const pg=bjjPages().find(x=>x.id===currentBjjPage);if(!pg)return;
   if(!document.getElementById('bp-doc-bar').children.length)richBar('bp-doc-bar','bp-doc');
   const doc=bjjDocs()[pg.id]||'';
-  document.getElementById('bp-title').textContent=pg.name;
+  const t=document.getElementById('bp-title');if(document.activeElement!==t)t.value=pg.name;
+  const d=document.getElementById('bp-desc');if(document.activeElement!==d)d.value=pg.desc||'';
+  document.getElementById('bp-crumb').textContent=pg.name;
   if(document.activeElement!==el)el.innerHTML=richHTML(doc);
   buildTOC('bp-doc','bp-toc');
-  const w=wordCount(doc);
-  document.getElementById('bp-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
-  document.getElementById('bp-sub').textContent=pg.desc||(w?`${w} word${w===1?'':'s'}`:'Nothing written yet');
+  document.getElementById('bp-sub').textContent=wordsLabel(wordCount(doc));
+  const link=(sec,label)=>`<div class="doc-row plain" onclick="goSection('${sec}','bjj')"><span class="dot"></span><span class="nm">${label}</span></div>`;
+  document.getElementById('bp-list').innerHTML=link('bjjlogs','Logs')+link('bjjpoints','Sticking points')+link('escapes','Escapes')+'<div class="doc-sep"></div>'+collRows('bjj',pg.id);
 }
 
 /* ============ BJJ ESCAPES ============ */
