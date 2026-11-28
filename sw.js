@@ -1,5 +1,5 @@
 // Simple offline-first service worker for the Dashboard PWA
-const CACHE = 'dashboard-v29';
+const CACHE = 'dashboard-v30';
 const ASSETS = [
   './',
   './index.html',
@@ -33,4 +33,21 @@ self.addEventListener('fetch', e => {
       })
       .catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
   );
+});
+
+// Morning notification (sent by the push server function)
+self.addEventListener('push', e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (_) { d = { body: e.data ? e.data.text() : '' }; }
+  e.waitUntil(self.registration.showNotification(d.title || 'Dashboard', {
+    body: d.body || '', icon: './icon-192.png', badge: './icon-192.png', tag: 'dashboard-morning'
+  }));
+});
+// Tapping it brings the dashboard forward, or opens it
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => {
+    for (const c of cs) if ('focus' in c) return c.focus();
+    return self.clients.openWindow(self.registration.scope);
+  }));
 });

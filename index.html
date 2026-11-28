@@ -1612,6 +1612,11 @@
             <span class="count" id="sync-status" style="margin-left:auto"></span></h3>
           <div id="sync-body"></div>
         </div>
+        <div class="card accent-top" id="push-card">
+          <h3><span class="hic c-amber"><svg class="ico"><use href="#i-sun"/></svg></span> Morning notification
+            <span class="count" id="push-status" style="margin-left:auto"></span></h3>
+          <div id="push-body"></div>
+        </div>
         <div class="card accent-top" id="gcal-card">
           <h3><span class="hic c-teal"><svg class="ico"><use href="#i-calendar"/></svg></span> Google Calendar
             <span class="count" id="gcal-status" style="margin-left:auto"></span></h3>
@@ -4285,6 +4290,7 @@ function copySyncCode(){
 }
 function renderSync(){
   if(typeof renderGcal==='function')renderGcal();
+  if(typeof renderPush==='function')renderPush();
   const body=document.getElementById('sync-body');if(!body)return;
   const st=document.getElementById('sync-status');
   if(syncOn()){
@@ -4312,6 +4318,107 @@ function renderSync(){
       </div>`;
   }
 }
+/* ============ MORNING NOTIFICATION (Web Push: tasks, today's schedule, weather) ============
+   Each device opts in separately. The server sends one notification a day at the chosen local time. */
+const PUSH_KEY=KEY+'_push';
+var pushCfg={time:'07:00',place:'',lat:null,lon:null};
+try{pushCfg=Object.assign(pushCfg,JSON.parse(localStorage.getItem(PUSH_KEY)||'{}'));}catch(_){}
+var pushDev={endpoint:'',busy:'',msg:'',err:''};
+const pushSupported=()=>'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window;
+const isIOS=()=>/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isStandalone=()=>(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+async function pushCall(body){
+  const r=await fetch(SUPA_URL+'/functions/v1/push',{method:'POST',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(Object.assign({code:syncCode},body))});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error==='code'?'Your sync code wasn\'t recognised by the server.':(j.error||('Notification service error '+r.status)));
+  return j;
+}
+async function pushInit(){
+  if(!pushSupported())return;
+  try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();pushDev.endpoint=sub?sub.endpoint:'';}catch(_){}
+  renderPush();
+}
+function pushReadForm(){
+  const t=document.getElementById('push-time');if(t&&/^\d\d:\d\d$/.test(t.value))pushCfg.time=t.value;
+  localStorage.setItem(PUSH_KEY,JSON.stringify(pushCfg));
+}
+const pushPayload=sub=>({action:'subscribe',sub:sub.toJSON(),tz:Intl.DateTimeFormat().resolvedOptions().timeZone,time:pushCfg.time,lat:pushCfg.lat,lon:pushCfg.lon,place:pushCfg.place});
+async function pushRun(label,fn){pushDev.busy=label;pushDev.err='';pushDev.msg='';renderPush();
+  try{await fn();}catch(e){pushDev.err=e.message||String(e);}
+  pushDev.busy='';renderPush();}
+/* must be started by a tap: asks the browser for permission, then registers this device with the server */
+function pushEnable(){pushReadForm();return pushRun('Turning on…',async()=>{
+  const perm=await Notification.requestPermission();
+  if(perm!=='granted')throw new Error('Notifications are blocked for this site. Allow them in your browser or phone settings, then try again.');
+  const reg=await navigator.serviceWorker.ready;
+  const {key}=await pushCall({action:'vapid'});
+  const bytes=Uint8Array.from(atob(key.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+  let sub=await reg.pushManager.getSubscription();
+  if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes});
+  await pushCall(pushPayload(sub));
+  pushDev.endpoint=sub.endpoint;pushDev.msg='On. You\'ll get it at '+pushCfg.time+' each day on this device.';
+});}
+function pushSave(){pushReadForm();return pushRun('Saving…',async()=>{
+  const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();
+  if(!sub){pushDev.endpoint='';throw new Error('This device is no longer registered. Turn notifications on again.');}
+  await pushCall(pushPayload(sub));pushDev.msg='Saved.';
+});}
+function pushTest(){pushReadForm();return pushRun('Sending…',async()=>{
+  const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();
+  if(!sub){pushDev.endpoint='';throw new Error('This device is no longer registered. Turn notifications on again.');}
+  await pushCall(pushPayload(sub));
+  const j=await pushCall({action:'test',endpoint:sub.endpoint});
+  pushDev.msg='Sent. It should appear within a few seconds:\n'+j.title+'\n'+j.body;
+});}
+function pushDisable(){return pushRun('Turning off…',async()=>{
+  const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();
+  if(sub){try{await pushCall({action:'unsubscribe',endpoint:sub.endpoint});}catch(_){}await sub.unsubscribe();}
+  pushDev.endpoint='';pushDev.msg='Off on this device.';
+});}
+/* weather location: look the place up by name (no location permission needed) */
+function pushFindPlace(){const q=(document.getElementById('push-place').value||'').trim();pushReadForm();
+  if(!q){pushCfg.place='';pushCfg.lat=pushCfg.lon=null;localStorage.setItem(PUSH_KEY,JSON.stringify(pushCfg));pushDev.msg='Weather removed.';pushDev.err='';renderPush(true);return;}
+  return pushRun('Looking up…',async()=>{
+    const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?count=5&language=en&format=json&name='+encodeURIComponent(q));
+    const j=await r.json().catch(()=>({}));const hits=j.results||[];
+    if(!hits.length)throw new Error('Couldn\'t find "'+q+'". Try a suburb or city name.');
+    const h=hits.find(x=>x.country_code==='AU')||hits[0];
+    pushCfg.place=h.name;pushCfg.lat=h.latitude;pushCfg.lon=h.longitude;pushCfg.placeFull=[h.name,h.admin1,h.country].filter(Boolean).join(', ');
+    localStorage.setItem(PUSH_KEY,JSON.stringify(pushCfg));
+    pushDev.msg='Weather set to '+pushCfg.placeFull+'.'+(pushDev.endpoint?' Press Save to apply.':'');
+  });}
+function renderPush(force){
+  const body=document.getElementById('push-body');if(!body||typeof pushDev==='undefined'||!pushDev)return;
+  const st=document.getElementById('push-status');
+  const ae=document.activeElement;if(!force&&ae&&ae.closest&&ae.closest('#push-body')&&ae.tagName==='INPUT')return; // don't redraw under the cursor
+  const intro=`<p style="color:var(--muted);font-size:13px;margin-bottom:12px">One notification each morning with the weather, what's due today and what's on. Each device is turned on separately.</p>`;
+  if(!pushSupported()){st.textContent='';
+    body.innerHTML=intro+`<p style="font-size:13px;color:var(--ink-soft)">${isIOS()&&!isStandalone()
+      ?'On iPhone and iPad, notifications only work from the Home Screen app. In Safari tap <b>Share → Add to Home Screen</b>, open the dashboard from that icon, then come back here.'
+      :'This browser doesn\'t support notifications.'}</p>`;return;}
+  if(!syncOn()){st.textContent='';body.innerHTML=intro+`<p style="font-size:13px;color:var(--ink-soft)">Turn on Cloud sync first. The notification is built from your synced tasks and calendar.</p>`;return;}
+  const on=!!pushDev.endpoint,blocked=Notification.permission==='denied';
+  st.textContent=pushDev.busy||(on?'On':'Off');
+  body.innerHTML=intro+
+    (blocked?`<div class="mail-banner err">Notifications are blocked for this site. Allow them in your browser or phone settings, then reload.</div>`:'')+
+    `<div class="mail-setup">
+      <label>Time</label><input type="time" id="push-time" value="${esc(pushCfg.time)}" style="max-width:150px">
+      <label>Weather location</label>
+      <div style="display:flex;gap:8px"><input id="push-place" value="${esc(pushCfg.place)}" placeholder="Suburb or city, e.g. Sydney" onkeydown="if(event.key==='Enter')pushFindPlace()" style="flex:1"><button class="btn ghost" onclick="pushFindPlace()">Set</button></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:5px">${pushCfg.lat!=null?'Using '+esc(pushCfg.placeFull||pushCfg.place)+'.':'No location set, so the weather line is left out.'}</div>
+    </div>
+    ${pushDev.err?`<div class="mail-banner err" style="margin-top:12px">${esc(pushDev.err)}</div>`:''}
+    ${pushDev.msg?`<div class="mail-banner" style="margin-top:12px;white-space:pre-line">${esc(pushDev.msg)}</div>`:''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+      ${on?`<button class="btn" onclick="pushSave()" ${pushDev.busy?'disabled':''}>Save</button>
+            <button class="btn ghost" onclick="pushTest()" ${pushDev.busy?'disabled':''}>Send a test now</button>
+            <button class="btn ghost" style="color:var(--red);margin-left:auto" onclick="pushDisable()" ${pushDev.busy?'disabled':''}>Turn off on this device</button>`
+         :`<button class="btn" onclick="pushEnable()" ${pushDev.busy||blocked?'disabled':''}>Turn on for this device</button>`}
+    </div>`;
+}
+
 /* ============ EMAIL (Gmail read-only + AI triage and reply drafts) ============
    Gmail is read straight from Google in this browser with a read-only sign-in (nothing can be sent or changed).
    Sender/subject/preview go to the mail-ai server function to be rated; a full email is sent only when you
@@ -4661,7 +4768,8 @@ if(seedUniPlacement())_changed=true;
 if(_changed)localStorage.setItem(KEY,JSON.stringify(S));
 renderAll();
 setInterval(tick,1000*30);tick(); // after every definition: tick can save, which reaches the sync layer
-if(syncOn()){pullNow();setTimeout(imgSyncAll,3000);gcalRefresh(true);} // fetch latest from the cloud on startup, then top up any pictures it's missing
+if(syncOn()){pullNow();setTimeout(imgSyncAll,3000);gcalRefresh(true);}
+pushInit(); // fetch latest from the cloud on startup, then top up any pictures it's missing
 if(!S.tasks.length&&!S.students.length&&!S.uni.length&&!S.events.length){
   document.getElementById('today-urgent').innerHTML=empty('i-spark','Welcome! Go to <b>Backup &amp; Settings</b> → <b>Load demo data</b> to explore, or just start adding your own.');
 }
