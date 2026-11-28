@@ -431,6 +431,48 @@
     transition:transform .12s,border-color .14s,color .14s,box-shadow .16s}
   .bk:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
   .bk.has{color:var(--ink);background:var(--panel)}
+  .bk .dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex:none}
+  .bk.has .dot{background:var(--teal)}
+  .bk mark,.tp-card mark{background:var(--amber-soft);color:inherit;border-radius:3px;padding:0 1px}
+  .bk-testament .of{color:var(--ink-soft);margin-left:6px}
+  .bible-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .bible-bar .pt-input{margin-left:auto;flex:1;min-width:180px;max-width:320px;padding:9px 12px;font-weight:600}
+  .seg{display:inline-flex;background:var(--soft-bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+  .seg-b{border:none;background:none;padding:7px 14px;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:7px;transition:.14s}
+  .seg-b:hover{color:var(--ink)}
+  .seg-b.active{background:var(--panel);color:var(--ink);box-shadow:var(--shadow-sm)}
+  .seg-b .n{font-family:var(--mono);font-size:10.5px;background:var(--line-soft);padding:1px 7px;border-radius:20px;color:var(--muted)}
+  .seg-b .n:empty{display:none}
+  .seg-b.active .n{background:var(--accent-soft);color:var(--accent)}
+  .tp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .tp-card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px 18px;cursor:pointer;box-shadow:var(--shadow-sm);
+    display:flex;flex-direction:column;min-height:136px;overflow:hidden;transition:transform .14s,box-shadow .18s,border-color .14s}
+  .tp-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--line)}
+  .tp-card.has::before{background:var(--teal)}
+  .tp-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--accent)}
+  .tp-name{font-size:15px;font-weight:800;letter-spacing:-.015em;padding-right:24px;line-height:1.3}
+  .tp-snip{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .tp-card:not(.has) .tp-snip{font-style:italic}
+  .tp-foot{margin-top:auto;padding-top:11px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+  .tp-chip{font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--soft-bg);border-radius:20px;padding:3px 9px;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tp-chip.more{color:var(--muted)}
+  .tp-go{margin-left:auto;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--accent);opacity:0;transition:opacity .12s}
+  .tp-card:hover .tp-go{opacity:1}
+  .tp-x{position:absolute;top:10px;right:10px;width:24px;height:24px;border:none;background:none;border-radius:7px;color:var(--muted);display:grid;place-items:center;opacity:0;transition:.12s;padding:0}
+  .tp-x svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+  .tp-card:hover .tp-x,.tp-x:focus-visible{opacity:1}
+  .tp-x:hover{background:var(--red-soft);color:var(--red)}
+  @media(hover:none){.tp-x{opacity:.5}.tp-go{opacity:1}}
+  .tp-card.add{border-style:dashed;box-shadow:none;background:transparent;align-items:center;justify-content:center;text-align:center;color:var(--muted);gap:4px}
+  .tp-card.add::before{display:none}
+  .tp-card.add:hover{color:var(--accent);transform:none;box-shadow:none}
+  .tp-card.add .plus{width:34px;height:34px;border-radius:10px;background:var(--soft-bg);display:grid;place-items:center;margin-bottom:4px}
+  .tp-card.add:hover .plus{background:var(--accent-soft)}
+  .tp-card.add .ttl{font-weight:800;font-size:14px}
+  .tp-card.add .hint{font-size:11.5px}
+  .tp-card.add.on{cursor:default;border-style:solid;border-color:var(--accent);background:var(--panel);align-items:stretch;text-align:left;box-shadow:0 0 0 3px var(--accent-soft)}
+  .tp-card.add.on input{width:100%;border:none;background:none;font:inherit;font-size:15px;font-weight:800;letter-spacing:-.015em;color:var(--ink);padding:0;outline:none}
+  .tp-card.add.on .hint{margin-top:8px;color:var(--muted)}
   .bk-x{margin-left:auto;flex:none;color:var(--muted);font-weight:700;font-size:15px;line-height:1;padding:0 2px;border-radius:6px}
   .bk-x:hover{color:var(--red);background:var(--red-soft)}
 
@@ -1461,20 +1503,15 @@
         <div class="ph-left"><div class="ph-ico c-teal"><svg class="ico"><use href="#i-book"/></svg></div>
           <div><h2>Bible</h2><div class="sub">Notes on scripture and doctrine.</div></div></div>
       </div>
-      <div class="filters" id="bible-tabs">
-        <button class="chip active" data-bt="book" onclick="setBibleTab('book')">Books</button>
-        <button class="chip" data-bt="theology" onclick="setBibleTab('theology')">Theology</button>
-      </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-teal"><svg class="ico"><use href="#i-book"/></svg></span> <span id="bible-tab-title">Books</span>
-          <span class="count" id="bible-count" style="margin-left:6px"></span>
-          <input class="pt-input" id="bible-search" placeholder="Search notes…" style="margin-left:auto;max-width:260px;font-weight:600" oninput="renderBibleNotes()"></h3>
-        <div class="addrow-day" id="theo-addrow" style="margin-bottom:16px;display:none">
-          <input id="theo-input" placeholder="Add a topic — e.g. Justification" onkeydown="if(event.key==='Enter')addTheologyTopic()">
-          <button class="btn" onclick="addTheologyTopic()"><svg class="ico"><use href="#i-plus"/></svg> Add topic</button>
+      <div class="bible-bar">
+        <div class="seg" id="bible-tabs">
+          <button class="seg-b active" data-bt="book" onclick="setBibleTab('book')">Books<span class="n" id="bt-n-book"></span></button>
+          <button class="seg-b" data-bt="theology" onclick="setBibleTab('theology')">Theology<span class="n" id="bt-n-theology"></span></button>
         </div>
-        <div id="bible-notes"></div>
+        <button class="chip" id="bible-only" onclick="bibleOnly=!bibleOnly;renderBibleNotes(true)">With notes</button>
+        <input class="pt-input" id="bible-search" placeholder="Search…" oninput="renderBibleNotes(true)">
       </div>
+      <div id="bible-notes"></div>
     </section>
 
     <!-- BIBLE · SINGLE BOOK -->
@@ -3054,16 +3091,23 @@ function openBookPage(name){currentBook=name;renderBookPage();goSection('biblebo
 let currentTopic='';
 function theoTopics(){if(!Array.isArray(S.theologyTopics))S.theologyTopics=[];return S.theologyTopics;}
 function addTheologyTopic(){
-  const i=document.getElementById('theo-input');const t=i.value.trim();if(!t)return;
-  if(!theoTopics().some(x=>samePos(x.name,t)))theoTopics().push({id:uid(),name:t});
-  i.value='';save();i.focus();
+  const i=document.getElementById('theo-input');const t=(i?i.value:'').trim();if(!t)return;
+  const ex=theoTopics().find(x=>samePos(x.name,t));
+  if(!ex)theoTopics().push({id:uid(),name:t});
+  theoAdding=false;if(i)i.blur();save();
+  openTopicPage(ex?ex.name:t);
+  setTimeout(()=>{const d=document.getElementById('th-doc');if(d)d.focus();},80);
 }
 function deleteTheologyTopic(id,ev){
   if(ev)ev.stopPropagation();
   const t=theoTopics().find(x=>x.id===id);if(!t)return;
   const w=wordCount(bibleDoc('theology',t.name));
-  if(w&&!confirm(`Delete “${t.name}” and its ${w} word${w===1?'':'s'} of notes?`))return;
+  const subs=bsubs().filter(x=>samePos(x.parent,t.name));
+  const parts=[];if(w)parts.push(`its ${w.toLocaleString()} word${w===1?'':'s'} of notes`);if(subs.length)parts.push(`${subs.length} subpage${subs.length===1?'':'s'}`);
+  if(!confirm(`Delete “${t.name}”${parts.length?' and '+parts.join(' and '):''}? This can't be undone.`))return;
   delete bdocs()[docKey('theology',t.name)];
+  subs.forEach(x=>delete bdocs()[subKey(x.parent,x.name)]);
+  S.bibleSubs=bsubs().filter(x=>!samePos(x.parent,t.name));
   S.theologyTopics=theoTopics().filter(x=>x.id!==id);
   save();
 }
@@ -3104,59 +3148,83 @@ function renderBookPage(){
   document.getElementById('bk-sub').textContent=
     (w?`${w} word${w===1?'':'s'}`:'Nothing written yet')+(plainText(ctx).trim()?' · context set':'');
 }
-function setBibleTab(t){
-  bibleTab=t;
-  document.querySelectorAll('#bible-tabs .chip').forEach(c=>c.classList.toggle('active',c.dataset.bt===t));
-  renderBibleNotes();
+var bibleOnly=false,theoAdding=false;
+function setBibleTab(t){bibleTab=t;theoAdding=false;const se=document.getElementById('bible-search');if(se)se.value='';renderBibleNotes(true);}
+/* text around a search hit, with the hit marked; falls back to the opening lines */
+function bibleSnip(text,q,len){
+  text=(text||'').trim();if(!text)return '';
+  const hl=x=>q?esc(x).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'),m=>`<mark>${m}</mark>`):esc(x);
+  const i=q?text.toLowerCase().indexOf(q):-1;
+  if(i<0)return hl(text.slice(0,len)+(text.length>len?'…':''));
+  const a=Math.max(0,i-40);return (a?'…':'')+hl(text.slice(a,a+len))+(a+len<text.length?'…':'');
 }
-function renderBibleNotes(){
+function theoStartAdd(){theoAdding=true;renderBibleNotes(true);const i=document.getElementById('theo-input');if(i)i.focus();}
+function theoCancelAdd(){if(!theoAdding)return;theoAdding=false;renderBibleNotes(true);}
+function renderBibleNotes(force){
   const el=document.getElementById('bible-notes');if(!el)return;
-  document.querySelectorAll('#bible-tabs .chip').forEach(c=>c.classList.toggle('active',c.dataset.bt===bibleTab));
-  document.getElementById('bible-tab-title').textContent=bibleTab==='book'?'Books':'Theology';
-  const addrow=document.getElementById('theo-addrow');
-  if(addrow)addrow.style.display=bibleTab==='theology'?'':'none';
-  const q=(document.getElementById('bible-search')?.value||'').trim().toLowerCase();
-  const written=kind=>Object.keys(bdocs()).filter(k=>k.startsWith(kind+':')&&plainText(bdocs()[k]).trim()).length;
-  // Books tab = an index of every book, each its own page
-  if(bibleTab==='book'){
-    const wc=name=>wordCount(bibleDoc('book',name));
-    const n=written('book');
-    document.getElementById('bible-count').textContent=n?`(${n} written)`:'';
-    const extras=[];
-    Object.keys(bdocs()).forEach(k=>{
-      if(!k.startsWith('book:'))return;const nm=k.slice(5);
-      if(nm&&!BIBLE_BOOKS.some(b=>samePos(b,nm))&&!extras.some(x=>samePos(x,nm)))extras.push(nm);});
-    const match=name=>!q||name.toLowerCase().includes(q)
-      ||plainText(bibleDoc('book',name)).toLowerCase().includes(q)
-      ||plainText(bookContext(name)).toLowerCase().includes(q);
-    const tiles=names=>names.filter(match).map(b=>{
-      const w=wc(b),hasCtx=!!plainText(bookContext(b)).trim();
-      return `<button class="bk ${(w||hasCtx)?'has':''} ${(!w&&hasCtx)?'ctx':''}" title="${hasCtx?'Context written':''}" onclick="openBookPage('${b.replace(/'/g,"\\'")}')">${esc(b)}</button>`;
-    }).join('');
-    const ot=tiles(BIBLE_BOOKS.slice(0,39)),nt=tiles(BIBLE_BOOKS.slice(39)),ex=tiles(extras);
-    el.innerHTML=(ot||nt||ex)?
-      (ot?`<div class="bk-testament">Old Testament</div><div class="bk-grid">${ot}</div>`:'')+
-      (nt?`<div class="bk-testament">New Testament</div><div class="bk-grid">${nt}</div>`:'')+
-      (ex?`<div class="bk-testament">Other</div><div class="bk-grid">${ex}</div>`:'')
-      :empty('i-book','No books match your search.');
-    return;
-  }
-  // Theology tab = an index of topics you've created, each its own page
-  const nw=written('theology');
-  document.getElementById('bible-count').textContent=nw?`(${nw} written)`:'';
+  if(!force&&document.activeElement&&document.activeElement.id==='theo-input')return; // don't redraw while naming a topic
+  document.querySelectorAll('#bible-tabs .seg-b').forEach(c=>c.classList.toggle('active',c.dataset.bt===bibleTab));
+  const se=document.getElementById('bible-search');
+  if(se)se.placeholder=bibleTab==='book'?'Search books and notes…':'Search topics and notes…';
+  const only=document.getElementById('bible-only');
+  if(only){only.style.display=bibleTab==='book'?'':'none';only.classList.toggle('active',bibleOnly);}
+  const q=(se?se.value:'').trim().toLowerCase();
+  const hlName=x=>q?esc(x).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'),m=>`<mark>${m}</mark>`):esc(x);
+  // topics: your own list plus any that only exist as saved notes
   const names=theoTopics().map(t=>t.name);
   Object.keys(bdocs()).forEach(k=>{if(!k.startsWith('theology:'))return;const nm=k.slice(9);
     if(nm&&!names.some(x=>samePos(x,nm)))names.push(nm);});
-  if(!names.length){el.innerHTML=empty('i-spark','No topics yet. Add one above — e.g. Justification — then write notes on its page.');return;}
-  const match=name=>!q||name.toLowerCase().includes(q)||plainText(bibleDoc('theology',name)).toLowerCase().includes(q);
-  const shown=names.filter(match).sort((a,b)=>a.localeCompare(b));
-  if(!shown.length){el.innerHTML=empty('i-spark','No topics match your search.');return;}
-  el.innerHTML=`<div class="bk-grid">${shown.map(t=>{
-    const c=wordCount(bibleDoc('theology',t));
-    const own=theoTopics().find(x=>samePos(x.name,t));
-    return `<button class="bk ${c?'has':''}" onclick="openTopicPage('${t.replace(/'/g,"\\'")}')">${esc(t)}
-      ${own?`<span class="bk-x" title="Delete topic" onclick="deleteTheologyTopic('${own.id}',event)">×</span>`:''}</button>`;
-  }).join('')}</div>`;
+  const bookHas=b=>!!(wordCount(bibleDoc('book',b))||plainText(bookContext(b)).trim());
+  const extras=[];
+  Object.keys(bdocs()).forEach(k=>{
+    if(!k.startsWith('book:'))return;const nm=k.slice(5);
+    if(nm&&!BIBLE_BOOKS.some(b=>samePos(b,nm))&&!extras.some(x=>samePos(x,nm)))extras.push(nm);});
+  const nb=document.getElementById('bt-n-book'),nt2=document.getElementById('bt-n-theology');
+  if(nb)nb.textContent=[...BIBLE_BOOKS,...extras].filter(bookHas).length||'';
+  if(nt2)nt2.textContent=names.length||'';
+
+  // ---- Books: every book of the Bible, each its own page
+  if(bibleTab==='book'){
+    const match=name=>(!bibleOnly||bookHas(name))&&(!q||name.toLowerCase().includes(q)
+      ||plainText(bibleDoc('book',name)).toLowerCase().includes(q)
+      ||plainText(bookContext(name)).toLowerCase().includes(q));
+    const group=(label,list)=>{const shown=list.filter(match);if(!shown.length)return '';
+      return `<div class="bk-testament">${label}<span class="of">${list.filter(bookHas).length} of ${list.length} with notes</span></div><div class="bk-grid">${shown.map(b=>{
+        const w=wordCount(bibleDoc('book',b)),hasCtx=!!plainText(bookContext(b)).trim();
+        return `<button class="bk ${(w||hasCtx)?'has':''} ${(!w&&hasCtx)?'ctx':''}" title="${w?'Notes written':hasCtx?'Context written':'Nothing written yet'}" onclick="openBookPage('${b.replace(/'/g,"\\'")}')"><span class="dot"></span>${hlName(b)}</button>`;
+      }).join('')}</div>`;};
+    const html=group('Old Testament',BIBLE_BOOKS.slice(0,39))+group('New Testament',BIBLE_BOOKS.slice(39))+group('Other',extras);
+    el.innerHTML=html?`<div class="card">${html}</div>`
+      :`<div class="card">${empty('i-book',bibleOnly&&!q?'No books have notes yet. Turn off “With notes” and pick a book to start.':'No books match your search.')}</div>`;
+    return;
+  }
+
+  // ---- Theology: a card per topic, with a preview of what's written and its subpages
+  const addCard=theoAdding
+    ?`<div class="tp-card add on"><input id="theo-input" placeholder="Topic name" autocomplete="off" onkeydown="if(event.key==='Enter')addTheologyTopic();else if(event.key==='Escape')theoCancelAdd()" onblur="if(!this.value.trim())theoCancelAdd()"><div class="hint">Enter to create and start writing · Esc to cancel</div></div>`
+    :`<div class="tp-card add" onclick="theoStartAdd()"><div class="plus">${I.use('i-plus')}</div><div class="ttl">New topic</div><div class="hint">e.g. Justification, Baptism, The Trinity</div></div>`;
+  const info=names.map(t=>{const text=plainText(bibleDoc('theology',t));
+    const subs=bsubs().filter(x=>samePos(x.parent,t));
+    const subHit=q?subs.find(x=>x.name.toLowerCase().includes(q)||plainText(bdocs()[subKey(t,x.name)]||'').toLowerCase().includes(q)):null;
+    return {t,text,subs,subHit,own:theoTopics().find(x=>samePos(x.name,t)),
+      hit:!q||t.toLowerCase().includes(q)||text.toLowerCase().includes(q)||!!subHit};});
+  const shown=info.filter(x=>x.hit).sort((a,b)=>a.t.localeCompare(b.t));
+  if(q&&!shown.length){el.innerHTML=`<div class="card">${empty('i-spark','No topics match your search.')}</div>`;return;}
+  el.innerHTML=`<div class="tp-grid">${shown.map(x=>{
+    const has=!!x.text.trim()||x.subs.length>0;
+    // a hit that's only inside a subpage shows that subpage's text, so you can see why the topic matched
+    const subText=x.subHit?plainText(bdocs()[subKey(x.t,x.subHit.name)]||''):'';
+    const inSub=q&&!x.text.toLowerCase().includes(q)&&subText.toLowerCase().includes(q);
+    const snip=inSub?`<b style="font-style:normal;color:var(--ink-soft)">${esc(x.subHit.name)}:</b> `+bibleSnip(subText,q,120)
+      :x.text.trim()?bibleSnip(x.text,q&&x.text.toLowerCase().includes(q)?q:'',150)
+      :x.subs.length?'Notes are in the subpages below.':'Nothing written yet. Open to start.';
+    const subs=x.subHit?[x.subHit,...x.subs.filter(y=>y!==x.subHit)]:x.subs;
+    return `<div class="tp-card ${has?'has':''}" onclick="openTopicPage('${x.t.replace(/'/g,"\\'")}')">
+      ${x.own?`<button class="tp-x" title="Delete topic" onclick="deleteTheologyTopic('${x.own.id}',event)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>`:''}
+      <div class="tp-name">${hlName(x.t)}</div>
+      <div class="tp-snip">${snip}</div>
+      <div class="tp-foot">${subs.slice(0,2).map(y=>`<span class="tp-chip">${hlName(y.name)}</span>`).join('')}${subs.length>2?`<span class="tp-chip more">+${subs.length-2} more</span>`:''}<span class="tp-go">Open →</span></div>
+    </div>`;}).join('')}${q?'':addCard}</div>`;
 }
 
 /* ============ BJJ HUB ============ */
