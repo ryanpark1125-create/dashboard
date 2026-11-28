@@ -421,6 +421,68 @@
   .toc-i.lv3{padding-left:34px;font-weight:500;color:var(--muted)}
   .toc-flash{background:var(--accent-soft);border-radius:6px}
 
+  /* Document pages (Bible book / topic / subpage): a paper column with a side rail */
+  .doc-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;min-height:34px}
+  .doc-crumbs{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
+  .doc-crumbs button{border:none;background:none;color:var(--muted);font:inherit;padding:3px 6px;border-radius:7px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc-crumbs button:hover{background:var(--hover);color:var(--accent)}
+  .doc-crumbs i{font-style:normal;opacity:.45}
+  .doc-crumbs b{color:var(--ink);font-weight:700;padding:3px 6px}
+  .doc-nav{margin-left:auto;display:flex;gap:6px}
+  .doc-wrap{display:grid;grid-template-columns:minmax(0,1fr) 264px;gap:18px;align-items:start}
+  .doc-main{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:38px 44px 64px;min-height:72vh}
+  .doc-col{max-width:740px;margin:0 auto}
+  .doc-title{display:block;width:100%;margin:0;border:none;background:none;font-family:inherit;font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.2;color:var(--ink);padding:0;outline:none;border-radius:8px}
+  input.doc-title:hover{background:var(--soft-bg);box-shadow:0 0 0 6px var(--soft-bg)}
+  input.doc-title:focus{background:none;box-shadow:none}
+  .doc-title::placeholder{color:var(--muted);opacity:.6}
+  .doc-meta{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted);margin:8px 0 20px}
+  .doc-save{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);transition:color .2s;white-space:nowrap}
+  .doc-save.ok{color:var(--green)}
+  .doc-editor.rich,.doc-editor.rich:focus-within{border:none;background:none;border-radius:0;overflow:visible;box-shadow:none}
+  .doc-bar.rich-bar{position:sticky;top:8px;z-index:6;background:var(--panel);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-sm);padding:5px 6px;margin-bottom:16px}
+  .doc-body.rich-in.page{padding:2px 0 0;font-size:15px;line-height:1.75;min-height:50vh;color:var(--ink)}
+  .doc-body h1{font-size:24px;letter-spacing:-.025em;margin:28px 0 8px;line-height:1.25}
+  .doc-body h2{font-size:19px;letter-spacing:-.02em;margin:24px 0 6px;line-height:1.3}
+  .doc-body h3{font-size:15.5px;margin:18px 0 4px}
+  .doc-body p{margin:0 0 12px}
+  .doc-body ul,.doc-body ol{margin:6px 0 14px;padding-left:28px}
+  .doc-body li{margin:4px 0}
+  .doc-body blockquote{margin:14px 0;padding:10px 16px;border-left:3px solid var(--teal);background:var(--teal-soft);border-radius:0 10px 10px 0;color:var(--ink-soft);font-style:italic}
+  .doc-body table{font-size:14px}
+  .doc-ctx{border:1px solid var(--line);border-radius:12px;background:var(--panel-2);margin-bottom:20px}
+  .doc-ctx summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;font-size:13px}
+  .doc-ctx summary::-webkit-details-marker{display:none}
+  .doc-ctx summary::before{content:"›";font-size:16px;color:var(--muted);transition:transform .14s;line-height:1}
+  .doc-ctx[open] summary::before{transform:rotate(90deg)}
+  .doc-ctx summary .t{font-weight:800}
+  .doc-ctx summary .h{color:var(--muted);font-size:12px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc-ctx .rich,.doc-ctx .rich:focus-within{border:none;border-top:1px solid var(--line);border-radius:0 0 12px 12px;background:var(--panel);box-shadow:none}
+  .doc-ctx .rich-in{min-height:84px;font-size:14px;line-height:1.65}
+  .doc-rail{position:sticky;top:18px;display:grid;gap:12px;max-height:calc(100dvh - 36px);overflow:auto}
+  .doc-box{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-sm);padding:12px}
+  .doc-box-h{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:2px 6px 8px;display:flex;align-items:center;gap:7px}
+  .doc-box-h span:not(:empty){background:var(--soft-bg);border-radius:20px;padding:1px 7px;color:var(--ink-soft)}
+  .doc-none{font-size:12px;color:var(--muted);padding:2px 6px 4px;line-height:1.5;display:none}
+  .doc-box.toc-empty .doc-none{display:block}
+  .toc.bare{background:none;border:none;padding:0;margin:0}
+  .toc.bare .toc-head{display:none}
+  .doc-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-soft);min-width:0}
+  .doc-row:hover{background:var(--hover)}
+  .doc-row.cur{background:var(--accent-soft);color:var(--accent);font-weight:700}
+  .doc-row .dot{width:6px;height:6px;border-radius:50%;background:var(--line);flex:none}
+  .doc-row.has .dot{background:var(--teal)}
+  .doc-row .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .doc-x{border:none;background:none;color:var(--muted);width:20px;height:20px;border-radius:6px;display:grid;place-items:center;padding:0;opacity:0;flex:none;font-size:14px;line-height:1}
+  .doc-row:hover .doc-x{opacity:1}
+  .doc-x:hover{background:var(--red-soft);color:var(--red)}
+  @media(hover:none){.doc-x{opacity:.5}}
+  .doc-add{width:100%;border:1px dashed var(--line);border-radius:9px;background:none;padding:8px 10px;font:inherit;font-size:12.5px;font-weight:600;margin-top:6px;color:var(--ink)}
+  .doc-add::placeholder{color:var(--muted)}
+  .doc-add:focus{outline:none;border-style:solid;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  @media(max-width:1000px){.doc-wrap{grid-template-columns:1fr}.doc-rail{position:static;max-height:none;order:-1;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+  @media(max-width:780px){.doc-top{padding-right:54px}.doc-main{padding:22px 18px 44px;border-radius:14px}.doc-title{font-size:24px}.doc-bar.rich-bar{top:4px}}
+
   /* Bible book index */
   .bk-testament{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
     color:var(--muted);margin:20px 0 10px}
@@ -1516,74 +1578,81 @@
 
     <!-- BIBLE · SINGLE BOOK -->
     <section class="section" id="sec-biblebook">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-teal"><svg class="ico"><use href="#i-book"/></svg></div>
-          <div><h2 id="bk-title">Book</h2><div class="sub" id="bk-sub"></div></div></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" onclick="goSection('bible','bible')">← Bible</button>
-        </div>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goBible('book')">Bible</button><i>/</i><button onclick="goBible('book')">Books</button><i>/</i><b id="bk-crumb"></b></div>
+        <div class="doc-nav"><button class="btn ghost sm" id="bk-prev" onclick="bookStep(-1)"></button><button class="btn ghost sm" id="bk-next" onclick="bookStep(1)"></button></div>
       </div>
-      <div class="card" style="margin-bottom:18px">
-        <h3><span class="hic c-purple"><svg class="ico"><use href="#i-doc"/></svg></span> Context
-          <span class="count" style="margin-left:auto;font-weight:600">saves as you click away</span></h3>
-        <div style="color:var(--muted);margin:-8px 0 10px;font-size:12.5px">Author, audience, date, occasion, structure — the background you want in mind before reading.</div>
-        <div class="rich"><div class="rich-bar" id="bk-ctx-bar"></div>
-          <div class="rich-in grow" id="bk-ctx" contenteditable="true" data-ph="e.g. Paul, writing to a church he hasn't visited…"
-            onkeydown="richKey(event,'bk-ctx')" onblur="saveBookContext(richVal('bk-ctx'))"></div></div>
-      </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-teal"><svg class="ico"><use href="#i-book"/></svg></span> Notes
-          <span class="count" id="bk-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="bk-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="bk-doc-bar"></div>
-          <div class="rich-in page" id="bk-doc" contenteditable="true" oninput="buildTOC('bk-doc','bk-toc')" data-ph="Write here — # for a heading, - for a bullet."
-            onkeydown="richKey(event,'bk-doc')" onblur="saveBibleDoc('bk-doc')"></div></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <h1 class="doc-title" id="bk-title">Book</h1>
+          <div class="doc-meta"><span id="bk-sub"></span><span class="doc-save" id="bk-doc-save"></span></div>
+          <details class="doc-ctx" id="bk-ctx-wrap">
+            <summary><span class="t">Context</span><span class="h">author, audience, date, occasion, structure</span><span class="doc-save" id="bk-ctx-save"></span></summary>
+            <div class="rich"><div class="rich-bar" id="bk-ctx-bar"></div>
+              <div class="rich-in grow" id="bk-ctx" contenteditable="true" data-ph="e.g. Paul, writing to a church he hasn't visited…"
+                oninput="docTouch('bk-ctx')" onkeydown="richKey(event,'bk-ctx')" onblur="docFlush('bk-ctx')"></div></div>
+          </details>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="bk-doc-bar"></div>
+            <div class="rich-in page doc-body" id="bk-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('bk-doc','bk-toc');docTouch('bk-doc')" onkeydown="richKey(event,'bk-doc')" onblur="docFlush('bk-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="bk-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
     <!-- BIBLE · SINGLE THEOLOGY TOPIC -->
     <section class="section" id="sec-theotopic">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-purple"><svg class="ico"><use href="#i-spark"/></svg></div>
-          <div><h2 id="th-title">Topic</h2><div class="sub" id="th-sub"></div></div></div>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" onclick="goSection('bible','bible')">← Bible</button>
-        </div>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goBible('theology')">Bible</button><i>/</i><button onclick="goBible('theology')">Theology</button><i>/</i><b id="th-crumb"></b></div>
+        <div class="doc-nav"><button class="btn ghost sm" style="color:var(--red)" onclick="deleteCurrentTopic()">Delete topic</button></div>
       </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-purple"><svg class="ico"><use href="#i-spark"/></svg></span> Notes
-          <span class="count" id="th-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="th-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="th-doc-bar"></div>
-          <div class="rich-in page" id="th-doc" contenteditable="true" oninput="buildTOC('th-doc','th-toc')" data-ph="Write here — # for a heading, - for a bullet."
-            onkeydown="richKey(event,'th-doc')" onblur="saveBibleDoc('th-doc')"></div></div>
-      </div>
-      <div class="card" style="margin-top:18px">
-        <h3><span class="hic c-purple"><svg class="ico"><use href="#i-folder"/></svg></span> Subpages
-          <span class="count" id="th-sub-count" style="margin-left:6px"></span></h3>
-        <div style="color:var(--muted);margin:-8px 0 12px;font-size:12.5px">Break a big topic into its own pages — each with its own notes.</div>
-        <div class="addrow-day" style="margin-bottom:14px">
-          <input id="th-sub-input" placeholder="Add a subpage — e.g. Marks of the Church" onkeydown="if(event.key==='Enter')addBibleSub()">
-          <button class="btn" onclick="addBibleSub()"><svg class="ico"><use href="#i-plus"/></svg> Add subpage</button>
-        </div>
-        <div id="th-sub-list"></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <input class="doc-title" id="th-title" placeholder="Untitled topic" autocomplete="off" title="Click to rename"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('th-doc').focus();}" onblur="renameTopic(this.value)">
+          <div class="doc-meta"><span id="th-sub"></span><span class="doc-save" id="th-doc-save"></span></div>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="th-doc-bar"></div>
+            <div class="rich-in page doc-body" id="th-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('th-doc','th-toc');docTouch('th-doc')" onkeydown="richKey(event,'th-doc')" onblur="docFlush('th-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box"><div class="doc-box-h">Subpages<span id="th-sub-count"></span></div>
+            <div id="th-sub-list"></div>
+            <input class="doc-add" id="th-sub-input" placeholder="+ New subpage" autocomplete="off" onkeydown="if(event.key==='Enter')addBibleSub('th-sub-input')"></div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="th-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
     <!-- BIBLE · SUBPAGE OF A TOPIC -->
     <section class="section" id="sec-biblesub">
-      <div class="page-head">
-        <div class="ph-left"><div class="ph-ico c-purple"><svg class="ico"><use href="#i-folder"/></svg></div>
-          <div><h2 id="sb-title">Subpage</h2><div class="sub" id="sb-sub"></div></div></div>
-        <button class="btn ghost" id="sb-back" onclick="openTopicPage(currentTopic)">← Topic</button>
+      <div class="doc-top">
+        <div class="doc-crumbs"><button onclick="goBible('theology')">Bible</button><i>/</i><button onclick="goBible('theology')">Theology</button><i>/</i><button id="sb-back" onclick="openTopicPage(currentTopic)"></button><i>/</i><b id="sb-crumb"></b></div>
+        <div class="doc-nav"><button class="btn ghost sm" style="color:var(--red)" onclick="deleteCurrentSub()">Delete subpage</button></div>
       </div>
-      <div class="card accent-top">
-        <h3><span class="hic c-purple"><svg class="ico"><use href="#i-folder"/></svg></span> Notes
-          <span class="count" id="sb-words" style="margin-left:auto;font-weight:600"></span></h3>
-        <div class="toc" id="sb-toc" style="display:none"></div>
-        <div class="rich"><div class="rich-bar" id="sb-doc-bar"></div>
-          <div class="rich-in page" id="sb-doc" contenteditable="true" oninput="buildTOC('sb-doc','sb-toc')" data-ph="Write here — # for a heading, - for a bullet."
-            onkeydown="richKey(event,'sb-doc')" onblur="saveBibleDoc('sb-doc')"></div></div>
+      <div class="doc-wrap">
+        <article class="doc-main"><div class="doc-col">
+          <input class="doc-title" id="sb-title" placeholder="Untitled subpage" autocomplete="off" title="Click to rename"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();document.getElementById('sb-doc').focus();}" onblur="renameSub(this.value)">
+          <div class="doc-meta"><span id="sb-sub"></span><span class="doc-save" id="sb-doc-save"></span></div>
+          <div class="rich doc-editor"><div class="rich-bar doc-bar" id="sb-doc-bar"></div>
+            <div class="rich-in page doc-body" id="sb-doc" contenteditable="true" data-ph="Start writing. # makes a heading, - a bullet, > a quote."
+              oninput="buildTOC('sb-doc','sb-toc');docTouch('sb-doc')" onkeydown="richKey(event,'sb-doc')" onblur="docFlush('sb-doc')"></div></div>
+        </div></article>
+        <aside class="doc-rail">
+          <div class="doc-box"><div class="doc-box-h">In this topic</div>
+            <div id="sb-sib-list"></div>
+            <input class="doc-add" id="sb-sub-input" placeholder="+ New subpage" autocomplete="off" onkeydown="if(event.key==='Enter')addBibleSub('sb-sub-input')"></div>
+          <div class="doc-box toc-empty"><div class="doc-box-h">Contents</div>
+            <div class="toc bare" id="sb-toc" style="display:none"></div>
+            <div class="doc-none">Headings you add with #, ## or ### show up here as links.</div></div>
+        </aside>
       </div>
     </section>
 
@@ -3022,7 +3091,8 @@ const bookContext=n=>bctx()[ctxKey(n)]||'';
 function saveBookContext(v){
   if(!currentBook)return;
   v=(v||'').trim();
-  if(v)bctx()[ctxKey(currentBook)]=v;else delete bctx()[ctxKey(currentBook)];
+  if(v===(bctx()[ctxKey(currentBook)]||'')||(!hasContent(v)&&!bctx()[ctxKey(currentBook)]))return; // nothing changed
+  if(hasContent(v))bctx()[ctxKey(currentBook)]=v;else delete bctx()[ctxKey(currentBook)];
   save();
 }
 /* each book/topic page is one document you type straight into */
@@ -3039,39 +3109,78 @@ function saveBibleDoc(fieldId){
   else if(fieldId==='th-doc'){if(!currentTopic)return;k=docKey('theology',currentTopic);}
   else if(fieldId==='sb-doc'){if(!currentTopic||!currentSub)return;k=subKey(currentTopic,currentSub);}
   else return;
-  const v=richVal(fieldId);
+  const v=richVal(fieldId),old=bdocs()[k]||'';
+  if(v===old||(!hasContent(v)&&!old))return; // nothing changed
   if(hasContent(v))bdocs()[k]=v;else delete bdocs()[k];
   save();
 }
-function addBibleSub(){
-  const i=document.getElementById('th-sub-input');const t=i.value.trim();
+/* ---- document pages: autosave while typing, with a small status beside the title ---- */
+const docTimers={};
+function docStatus(fieldId,text,ok){const e=document.getElementById(fieldId+'-save');if(e){e.textContent=text;e.classList.toggle('ok',!!ok);}}
+function docTouch(fieldId){docStatus(fieldId,'Editing…');clearTimeout(docTimers[fieldId]);docTimers[fieldId]=setTimeout(()=>docFlush(fieldId),1200);}
+function docFlush(fieldId){
+  const pending=!!docTimers[fieldId];clearTimeout(docTimers[fieldId]);delete docTimers[fieldId];
+  if(fieldId==='bk-ctx')saveBookContext(richVal('bk-ctx'));else saveBibleDoc(fieldId);
+  if(pending)docStatus(fieldId,'Saved ✓',true);
+}
+function goBible(tab){setBibleTab(tab);goSection('bible','bible');}
+const wordsLabel=w=>w?`${w.toLocaleString()} word${w===1?'':'s'}`:'Nothing written yet';
+const topicSubs=t=>bsubs().filter(x=>samePos(x.parent,t)).sort((a,b)=>a.name.localeCompare(b.name));
+/* a subpage row for the side rail */
+const subRow=(sp,cur)=>{const has=hasContent(bdocs()[subKey(sp.parent,sp.name)]||'');
+  return `<div class="doc-row ${has?'has':''} ${cur?'cur':''}" onclick="openSubPage('${sp.name.replace(/'/g,"\\'")}')"><span class="dot"></span><span class="nm">${esc(sp.name)}</span>
+    <button class="doc-x" title="Delete subpage" onclick="deleteBibleSub('${sp.id}',event)">×</button></div>`;};
+function addBibleSub(inputId){
+  const i=document.getElementById(inputId||'th-sub-input');const t=(i?i.value:'').trim();
   if(!t||!currentTopic)return;
-  if(!bsubs().some(x=>samePos(x.parent,currentTopic)&&samePos(x.name,t)))bsubs().push({id:uid(),parent:currentTopic,name:t});
-  i.value='';save();i.focus();
+  const ex=bsubs().find(x=>samePos(x.parent,currentTopic)&&samePos(x.name,t));
+  if(!ex)bsubs().push({id:uid(),parent:currentTopic,name:t});
+  i.value='';i.blur();save();
+  openSubPage(ex?ex.name:t); // go straight to it so you can start writing
+  setTimeout(()=>{const d=document.getElementById('sb-doc');if(d)d.focus();},80);
 }
 function deleteBibleSub(id,ev){
   if(ev)ev.stopPropagation();
-  const sp=bsubs().find(x=>x.id===id);if(!sp)return;
+  const sp=bsubs().find(x=>x.id===id);if(!sp)return false;
   const w=wordCount(bdocs()[subKey(sp.parent,sp.name)]||'');
-  if(w&&!confirm(`Delete “${sp.name}” and its ${w} word${w===1?'':'s'} of notes?`))return;
+  if(!confirm(`Delete the subpage “${sp.name}”${w?` and its ${w.toLocaleString()} word${w===1?'':'s'} of notes`:''}? This can't be undone.`))return false;
+  const wasOpen=samePos(sp.parent,currentTopic)&&samePos(sp.name,currentSub)&&document.getElementById('sec-biblesub').classList.contains('active');
   delete bdocs()[subKey(sp.parent,sp.name)];
   S.bibleSubs=bsubs().filter(x=>x.id!==id);
+  if(wasOpen)currentSub='';
   save();
+  if(wasOpen)openTopicPage(currentTopic);
+  return true;
+}
+function deleteCurrentSub(){const sp=bsubs().find(x=>samePos(x.parent,currentTopic)&&samePos(x.name,currentSub));if(sp)deleteBibleSub(sp.id,null);}
+function renameSub(v){
+  const el=document.getElementById('sb-title');const n=(v||'').trim(),old=currentSub;
+  if(!old)return;
+  if(!n||n===old){el.value=old;return;}
+  if(!samePos(n,old)&&bsubs().some(x=>samePos(x.parent,currentTopic)&&samePos(x.name,n))){alert(`“${n}” already exists in this topic.`);el.value=old;return;}
+  const ko=subKey(currentTopic,old),kn=subKey(currentTopic,n);
+  if(ko!==kn&&bdocs()[ko]!=null){bdocs()[kn]=bdocs()[ko];delete bdocs()[ko];}
+  const sp=bsubs().find(x=>samePos(x.parent,currentTopic)&&samePos(x.name,old));
+  if(sp)sp.name=n;else bsubs().push({id:uid(),parent:currentTopic,name:n});
+  currentSub=n;save();
 }
 function openSubPage(name){
-  currentSub=name;renderSubPage();goSection('biblesub','bible');
+  currentSub=name;docStatus('sb-doc','');renderSubPage();goSection('biblesub','bible');
 }
 function renderSubPage(){
   const el=document.getElementById('sb-doc');if(!el||!currentTopic||!currentSub)return;
   if(!document.getElementById('sb-doc-bar').children.length)richBar('sb-doc-bar','sb-doc');
   const doc=bdocs()[subKey(currentTopic,currentSub)]||'';
-  document.getElementById('sb-title').textContent=currentSub;
-  document.getElementById('sb-back').innerHTML='← '+esc(currentTopic);
+  const t=document.getElementById('sb-title');if(document.activeElement!==t)t.value=currentSub;
+  document.getElementById('sb-crumb').textContent=currentSub;
+  document.getElementById('sb-back').textContent=currentTopic;
   if(document.activeElement!==el)el.innerHTML=richHTML(doc);
   buildTOC('sb-doc','sb-toc');
-  const w=wordCount(doc);
-  document.getElementById('sb-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
-  document.getElementById('sb-sub').textContent=(w?`${w} word${w===1?'':'s'}`:'Nothing written yet')+' · in '+currentTopic;
+  document.getElementById('sb-sub').textContent=wordsLabel(wordCount(doc));
+  const topicHas=hasContent(bibleDoc('theology',currentTopic));
+  document.getElementById('sb-sib-list').innerHTML=
+    `<div class="doc-row ${topicHas?'has':''}" onclick="openTopicPage(currentTopic)"><span class="dot"></span><span class="nm">${esc(currentTopic)} <span style="color:var(--muted);font-weight:500">· overview</span></span></div>`+
+    topicSubs(currentTopic).map(sp=>subRow(sp,samePos(sp.name,currentSub))).join('');
 }
 /* one-time: fold the old per-note records into each page's document */
 function migrateBibleDocs(){
@@ -3086,7 +3195,13 @@ function migrateBibleDocs(){
   S.bibleNotes=[];
   return true;
 }
-function openBookPage(name){currentBook=name;renderBookPage();goSection('biblebook','bible');}
+function openBookPage(name){
+  currentBook=name;docStatus('bk-doc','');docStatus('bk-ctx','');
+  const cw=document.getElementById('bk-ctx-wrap');if(cw)cw.open=hasContent(bookContext(name)); // show the context when there is some
+  renderBookPage();goSection('biblebook','bible');
+}
+/* previous / next book of the Bible */
+function bookStep(d){const i=BIBLE_BOOKS.findIndex(b=>samePos(b,currentBook));if(i<0)return;const n=BIBLE_BOOKS[i+d];if(n)openBookPage(n);}
 /* theology topics — explicit subpages, like books */
 let currentTopic='';
 function theoTopics(){if(!Array.isArray(S.theologyTopics))S.theologyTopics=[];return S.theologyTopics;}
@@ -3111,31 +3226,49 @@ function deleteTheologyTopic(id,ev){
   S.theologyTopics=theoTopics().filter(x=>x.id!==id);
   save();
 }
-function openTopicPage(name){currentTopic=name;renderTopicPage();goSection('theotopic','bible');}
+function openTopicPage(name){currentTopic=name;docStatus('th-doc','');renderTopicPage();goSection('theotopic','bible');}
+function renameTopic(v){
+  const el=document.getElementById('th-title');const n=(v||'').trim(),old=currentTopic;
+  if(!old)return;
+  if(!n||n===old){el.value=old;return;}
+  const taken=!samePos(n,old)&&(theoTopics().some(x=>samePos(x.name,n))||bdocs()[docKey('theology',n)]!=null);
+  if(taken){alert(`A topic called “${n}” already exists.`);el.value=old;return;}
+  const move=(a,b)=>{if(a!==b&&bdocs()[a]!=null){bdocs()[b]=bdocs()[a];delete bdocs()[a];}};
+  move(docKey('theology',old),docKey('theology',n));
+  bsubs().filter(x=>samePos(x.parent,old)).forEach(x=>{move(subKey(old,x.name),subKey(n,x.name));x.parent=n;});
+  const own=theoTopics().find(x=>samePos(x.name,old));
+  if(own)own.name=n;else theoTopics().push({id:uid(),name:n});
+  currentTopic=n;save();
+}
+function deleteCurrentTopic(){
+  const t=currentTopic;if(!t)return;
+  const w=wordCount(bibleDoc('theology',t)),subs=bsubs().filter(x=>samePos(x.parent,t));
+  const parts=[];if(w)parts.push(`its ${w.toLocaleString()} word${w===1?'':'s'} of notes`);if(subs.length)parts.push(`${subs.length} subpage${subs.length===1?'':'s'}`);
+  if(!confirm(`Delete “${t}”${parts.length?' and '+parts.join(' and '):''}? This can't be undone.`))return;
+  delete bdocs()[docKey('theology',t)];
+  subs.forEach(x=>delete bdocs()[subKey(x.parent,x.name)]);
+  S.bibleSubs=bsubs().filter(x=>!samePos(x.parent,t));
+  S.theologyTopics=theoTopics().filter(x=>!samePos(x.name,t));
+  currentTopic='';save();goBible('theology');
+}
 function renderTopicPage(){
   const el=document.getElementById('th-doc');if(!el||!currentTopic)return;
-  document.getElementById('th-title').textContent=currentTopic;
+  const t=document.getElementById('th-title');if(document.activeElement!==t)t.value=currentTopic;
+  document.getElementById('th-crumb').textContent=currentTopic;
   if(!document.getElementById('th-doc-bar').children.length)richBar('th-doc-bar','th-doc');
   const doc=bibleDoc('theology',currentTopic);
   if(document.activeElement!==el)el.innerHTML=richHTML(doc);
   buildTOC('th-doc','th-toc');
-  const w=wordCount(doc);
-  document.getElementById('th-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
-  const subs=bsubs().filter(x=>samePos(x.parent,currentTopic));
-  document.getElementById('th-sub').textContent=(w?`${w} word${w===1?'':'s'}`:'Nothing written yet')
-    +(subs.length?` · ${subs.length} subpage${subs.length===1?'':'s'}`:'');
-  document.getElementById('th-sub-count').textContent=subs.length?`(${subs.length})`:'';
-  document.getElementById('th-sub-list').innerHTML=subs.length
-    ? `<div class="bk-grid">${subs.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(sp=>{
-        const sw=wordCount(bdocs()[subKey(sp.parent,sp.name)]||'');
-        return `<button class="bk ${sw?'has':''}" onclick="openSubPage('${sp.name.replace(/'/g,"\\'")}')">${esc(sp.name)}
-          <span class="bk-x" title="Delete subpage" onclick="deleteBibleSub('${sp.id}',event)">×</span></button>`;
-      }).join('')}</div>`
-    : '<div class="sp-none">No subpages yet.</div>';
+  const subs=topicSubs(currentTopic);
+  document.getElementById('th-sub').textContent=wordsLabel(wordCount(doc))+(subs.length?` · ${subs.length} subpage${subs.length===1?'':'s'}`:'');
+  document.getElementById('th-sub-count').textContent=subs.length||'';
+  document.getElementById('th-sub-list').innerHTML=subs.length?subs.map(sp=>subRow(sp,false)).join('')
+    :'<div class="doc-none" style="display:block">Split a big topic into its own pages, e.g. Marks of the Church.</div>';
 }
 function renderBookPage(){
   const el=document.getElementById('bk-doc');if(!el||!currentBook)return;
   document.getElementById('bk-title').textContent=currentBook;
+  document.getElementById('bk-crumb').textContent=currentBook;
   if(!document.getElementById('bk-ctx-bar').children.length)richBar('bk-ctx-bar','bk-ctx');
   if(!document.getElementById('bk-doc-bar').children.length)richBar('bk-doc-bar','bk-doc');
   const ctx=bookContext(currentBook),doc=bibleDoc('book',currentBook);
@@ -3143,10 +3276,11 @@ function renderBookPage(){
   if(box&&document.activeElement!==box)box.innerHTML=richHTML(ctx); // don't clobber what you're typing
   if(document.activeElement!==el)el.innerHTML=richHTML(doc);
   buildTOC('bk-doc','bk-toc');
-  const w=wordCount(doc);
-  document.getElementById('bk-words').textContent=w?`${w} word${w===1?'':'s'}`:'';
-  document.getElementById('bk-sub').textContent=
-    (w?`${w} word${w===1?'':'s'}`:'Nothing written yet')+(plainText(ctx).trim()?' · context set':'');
+  const i=BIBLE_BOOKS.findIndex(b=>samePos(b,currentBook));
+  document.getElementById('bk-sub').textContent=wordsLabel(wordCount(doc))+(hasContent(ctx)?' · context written':'')+(i>=0?` · ${i<39?'Old':'New'} Testament`:'');
+  const pv=document.getElementById('bk-prev'),nx=document.getElementById('bk-next');
+  pv.style.display=i>0?'':'none';nx.style.display=i>=0&&i<BIBLE_BOOKS.length-1?'':'none';
+  if(i>0)pv.textContent='← '+BIBLE_BOOKS[i-1];if(i>=0&&i<BIBLE_BOOKS.length-1)nx.textContent=BIBLE_BOOKS[i+1]+' →';
 }
 var bibleOnly=false,theoAdding=false;
 function setBibleTab(t){bibleTab=t;theoAdding=false;const se=document.getElementById('bible-search');if(se)se.value='';renderBibleNotes(true);}
@@ -3741,6 +3875,7 @@ function buildTOC(edId,tocId){
   const ed=document.getElementById(edId),toc=document.getElementById(tocId);
   if(!ed||!toc)return;
   const hs=tocHeads(ed);
+  const box=toc.closest('.doc-box');if(box)box.classList.toggle('toc-empty',!hs.length);
   if(!hs.length){toc.innerHTML='';toc.style.display='none';return;}
   toc.style.display='';
   toc.innerHTML='<div class="toc-head">Contents</div>'+hs.map((h,i)=>
